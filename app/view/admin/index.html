@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard Admin — Informasi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<header class="navbar scrolled">
+    <div class="container">
+        <a href="/admin" class="logo">mhafiznugraha<span style="color:var(--muted);font-weight:500"> / Admin</span></a>
+        <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+        <nav class="nav-links">
+            <a href="/">Lihat Situs</a>
+            <a href="/admin">Informasi</a>
+            <a href="/admin/portofolio">Portofolio</a>
+            <a href="/admin/repository">Repository</a>
+            <a href="/admin/logout">Keluar</a>
+        </nav>
+    </div>
+</header>
+
+<!-- ================= DASHBOARD ================= -->
+<main class="admin-shell">
+    <div class="container">
+        <div class="admin-head">
+            <div>
+                <p class="eyebrow">Halo, <?=htmlspecialchars($admin_name)?></p>
+                <h1>Kelola Informasi</h1>
+            </div>
+            <a href="/admin/create" class="btn">+ Tambah Informasi</a>
+        </div>
+
+        <!-- Toolbar cari -->
+        <div class="toolbar">
+            <form method="get" action="/admin">
+                <input type="text" name="q" placeholder="Cari judul atau isi…" value="<?=htmlspecialchars($keyword)?>" style="max-width:340px">
+                <button class="btn ghost small" type="submit">Cari</button>
+            </form>
+        </div>
+
+        <?php if (count($informations) == 0): ?>
+            <div class="empty">Belum ada data. Klik <strong>Tambah Informasi</strong> untuk membuat.</div>
+        <?php else: ?>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:72px">Gambar</th>
+                            <th>Judul</th>
+                            <th class="hide-sm">Kategori</th>
+                            <th>Status</th>
+                            <th class="hide-sm">Dibuat</th>
+                            <th style="text-align:right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($informations as $item): ?>
+                            <tr>
+                                <td>
+                                    <?php if (!empty($item['image'])): ?>
+                                        <img class="thumb" src="<?=htmlspecialchars($item['image'])?>" alt="">
+                                    <?php else: ?>
+                                        <span class="muted" style="font-size:.75rem">—</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><span class="title-cell"><?=htmlspecialchars($item['title'])?></span></td>
+                                <td class="hide-sm"><span class="tag"><?=htmlspecialchars($item['category'])?></span></td>
+                                <td>
+                                    <?php if ($item['status'] === 'published'): ?>
+                                        <span class="tag solid">Published</span>
+                                    <?php else: ?>
+                                        <span class="tag draft">Draft</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="hide-sm"><?=date('d M Y', strtotime($item['created_at']))?></td>
+                                <td>
+                                    <div class="actions" style="justify-content:flex-end">
+                                        <a href="/admin/edit/<?=$item['id']?>" class="btn ghost small">Edit</a>
+                                        <form method="post" action="/admin/delete/<?=$item['id']?>" onsubmit="return confirm('Yakin hapus informasi ini?')">
+                                            <button class="btn danger small" type="submit">Hapus</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <?php if ($informations->lastPage() > 1): ?>
+                <div class="pagination">
+                    <?php for ($p = 1; $p <= $informations->lastPage(); $p++): ?>
+                        <a href="/admin?q=<?=urlencode($keyword)?>&page=<?=$p?>"
+                           class="<?=$p==$informations->currentPage()?'active':''?>"><?=$p?></a>
+                    <?php endfor; ?>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

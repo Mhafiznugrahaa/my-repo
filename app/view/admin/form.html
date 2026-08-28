@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?=isset($info) && isset($info->id) ? 'Edit' : 'Tambah'?> Informasi — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<header class="navbar scrolled">
+    <div class="container">
+        <a href="/admin" class="logo">mhafiznugraha<span style="color:var(--muted);font-weight:500"> / Admin</span></a>
+        <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+        <nav class="nav-links">
+            <a href="/">Lihat Situs</a>
+            <a href="/admin">Informasi</a>
+            <a href="/admin/portofolio">Portofolio</a>
+            <a href="/admin/repository">Repository</a>
+            <a href="/admin/logout">Keluar</a>
+        </nav>
+    </div>
+</header>
+
+<!-- ================= FORM ================= -->
+<main class="admin-shell">
+    <div class="container">
+        <div class="admin-head">
+            <div>
+                <p class="eyebrow"><a href="/admin" class="muted">&larr; Kembali ke daftar</a></p>
+                <h1><?=isset($info) && isset($info->id) ? 'Edit Informasi' : 'Tambah Informasi'?></h1>
+            </div>
+        </div>
+
+        <div class="panel">
+            <form method="post" enctype="multipart/form-data"
+                  action="<?=isset($info) && isset($info->id) ? '/admin/update/'.$info->id : '/admin/store'?>">
+
+                <div class="field">
+                    <label>Judul</label>
+                    <input type="text" name="title"
+                           value="<?=isset($info) && $info ? htmlspecialchars($info->title ?? '') : ''?>"
+                           placeholder="Judul informasi">
+                    <?php if (!empty($errors['title'])): ?><div class="error"><?=htmlspecialchars($errors['title'])?></div><?php endif; ?>
+                </div>
+
+                <div class="field">
+                    <label>Kategori</label>
+                    <input type="text" name="category"
+                           value="<?=isset($info) && $info ? htmlspecialchars($info->category ?? '') : ''?>"
+                           placeholder="Misal: Pengumuman">
+                </div>
+
+                <div class="field">
+                    <label>Isi Informasi</label>
+                    <textarea name="body" placeholder="Tulis isi informasi di sini…"><?=isset($info) && $info ? htmlspecialchars($info->body ?? '') : ''?></textarea>
+                    <?php if (!empty($errors['body'])): ?><div class="error"><?=htmlspecialchars($errors['body'])?></div><?php endif; ?>
+                </div>
+
+                <div class="field">
+                    <label>Gambar <span style="text-transform:none;letter-spacing:0;font-weight:400">(opsional · jpg, png, gif, webp · maks 2MB)</span></label>
+
+                    <?php $currentImage = isset($info) && $info ? ($info->image ?? '') : ''; ?>
+                    <?php if ($currentImage): ?>
+                        <!-- Preview gambar yang sudah tersimpan -->
+                        <div class="img-preview">
+                            <img src="<?=htmlspecialchars($currentImage)?>" alt="Gambar saat ini">
+                            <label class="remove-check">
+                                <input type="checkbox" name="remove_image" value="1"> Hapus gambar ini
+                            </label>
+                        </div>
+                    <?php endif; ?>
+
+                    <input type="file" name="image" accept="image/*" id="imageInput">
+                    <!-- Preview gambar baru yang dipilih (sebelum diunggah) -->
+                    <div id="newPreview" class="img-preview" style="display:none">
+                        <img src="" alt="Pratinjau">
+                    </div>
+
+                    <?php if (!empty($errors['image'])): ?><div class="error"><?=htmlspecialchars($errors['image'])?></div><?php endif; ?>
+                </div>
+
+                <div class="field">
+                    <label>Status</label>
+                    <?php $st = isset($info) && $info ? ($info->status ?? 'published') : 'published'; ?>
+                    <select name="status" style="max-width:260px">
+                        <option value="published" <?=$st==='published'?'selected':''?>>Published (tampil di publik)</option>
+                        <option value="draft" <?=$st==='draft'?'selected':''?>>Draft (disembunyikan)</option>
+                    </select>
+                </div>
+
+                <div style="display:flex;gap:12px;margin-top:8px">
+                    <button class="btn" type="submit">Simpan</button>
+                    <a href="/admin" class="btn ghost">Batal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script src="/app.js"></script>
+<script>
+    // Tampilkan pratinjau gambar begitu admin memilih file.
+    (function () {
+        var input = document.getElementById('imageInput');
+        var box = document.getElementById('newPreview');
+        if (!input || !box) return;
+        var img = box.querySelector('img');
+        input.addEventListener('change', function () {
+            var file = this.files && this.files[0];
+            if (!file) { box.style.display = 'none'; return; }
+            img.src = URL.createObjectURL(file);
+            box.style.display = 'block';
+        });
+    })();
+</script>
+</body>
+</html>

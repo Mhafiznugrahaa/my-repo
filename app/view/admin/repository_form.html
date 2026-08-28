@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?=isset($repository) && isset($repository->id) ? 'Edit' : 'Tambah'?> Repository — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="navbar scrolled">
+    <div class="container">
+        <a href="/admin" class="logo">mhafiznugraha<span style="color:var(--muted);font-weight:500"> / Admin</span></a>
+        <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+        <nav class="nav-links">
+            <a href="/">Lihat Situs</a>
+            <a href="/admin">Informasi</a>
+            <a href="/admin/portofolio">Portofolio</a>
+            <a href="/admin/repository">Repository</a>
+            <a href="/admin/logout">Keluar</a>
+        </nav>
+    </div>
+</header>
+
+<main class="admin-shell">
+    <div class="container">
+        <div class="admin-head">
+            <div>
+                <p class="eyebrow"><a href="/admin/repository" class="muted">&larr; Kembali ke daftar</a></p>
+                <h1><?=isset($repository) && isset($repository->id) ? 'Edit Repository' : 'Tambah Repository Baru'?></h1>
+            </div>
+        </div>
+
+        <div class="panel">
+            <form method="post" action="<?=isset($repository) && isset($repository->id) ? '/admin/repository/update/'.$repository->id : '/admin/repository/store'?>">
+
+                <div class="field">
+                    <label>Nama Repository</label>
+                    <input type="text" name="name"
+                           value="<?=isset($repository) && $repository ? htmlspecialchars($repository->name ?? '') : ''?>"
+                           placeholder="Nama repository">
+                    <?php if (!empty($errors['name'])): ?><div class="error"><?=htmlspecialchars($errors['name'])?></div><?php endif; ?>
+                </div>
+
+                <div class="field">
+                    <label>Deskripsi</label>
+                    <textarea name="description" placeholder="Deskripsi repository…"><?=isset($repository) && $repository ? htmlspecialchars($repository->description ?? '') : ''?></textarea>
+                </div>
+
+                <div class="field">
+                    <label>Bahasa</label>
+                    <input type="text" name="language"
+                           value="<?=isset($repository) && $repository ? htmlspecialchars($repository->language ?? '') : ''?>"
+                           placeholder="Misal: PHP, Python, Dart">
+                </div>
+
+                <div class="field">
+                    <label>URL GitHub</label>
+                    <input type="url" name="github_url"
+                           value="<?=isset($repository) && $repository ? htmlspecialchars($repository->github_url ?? '') : ''?>"
+                           placeholder="https://github.com/Mhafiznugrahaa/nama-repo">
+                </div>
+
+                <div class="field">
+                    <label>Jumlah Stars</label>
+                    <input type="number" name="stars" min="0"
+                           value="<?=isset($repository) && $repository ? htmlspecialchars($repository->stars ?? '0') : '0'?>">
+                </div>
+
+                <div class="field">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="published" <?=isset($repository) && ($repository->status ?? 'published') === 'published' ? 'selected' : ''?>>Published (tampil di publik)</option>
+                        <option value="draft" <?=isset($repository) && ($repository->status ?? '') === 'draft' ? 'selected' : ''?>>Draft (disembunyikan)</option>
+                    </select>
+                </div>
+
+                <div style="display:flex;gap:12px;margin-top:8px">
+                    <button class="btn" type="submit">Simpan</button>
+                    <a href="/admin/repository" class="btn ghost">Batal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

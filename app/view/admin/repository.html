@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kelola Repository — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="navbar scrolled">
+    <div class="container">
+        <a href="/admin" class="logo">mhafiznugraha<span style="color:var(--muted);font-weight:500"> / Admin</span></a>
+        <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+        <nav class="nav-links">
+            <a href="/">Lihat Situs</a>
+            <a href="/admin">Informasi</a>
+            <a href="/admin/portofolio">Portofolio</a>
+            <a href="/admin/repository">Repository</a>
+            <a href="/admin/logout">Keluar</a>
+        </nav>
+    </div>
+</header>
+
+<main class="admin-shell">
+    <div class="container">
+        <div class="admin-head">
+            <div>
+                <p class="eyebrow">Halo, <?=htmlspecialchars($admin_name)?></p>
+                <h1>Kelola Repository GitHub</h1>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <a href="/admin/repository/create" class="btn">+ Tambah Manual</a>
+            </div>
+        </div>
+
+        <?php if (!empty($import_success)): ?>
+            <div class="alert success"><?=htmlspecialchars($import_success)?></div>
+        <?php endif; ?>
+        <?php if (!empty($import_error)): ?>
+            <div class="alert"><?=htmlspecialchars($import_error)?></div>
+        <?php endif; ?>
+
+        <!-- Import JSON -->
+        <div class="panel" style="margin-bottom:40px;max-width:100%">
+            <h3 style="margin-bottom:16px;font-size:1.1rem">Import dari File JSON</h3>
+            <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px">Tempel konten JSON dari file <code>github.com_Mhafiznugrahaa_tab_repositories.json</code> atau file lain yang formatnya sama.</p>
+            <form method="post" action="/admin/repository/import">
+                <div class="field" style="margin-bottom:12px">
+                    <textarea name="json_data" placeholder="Tempel JSON di sini…" style="min-height:120px;font-family:monospace;font-size:.85rem"></textarea>
+                </div>
+                <button class="btn ghost small" type="submit">Import Repository</button>
+            </form>
+        </div>
+
+        <div class="toolbar">
+            <form method="get" action="/admin/repository">
+                <input type="text" name="q" placeholder="Cari nama repo…" value="<?=htmlspecialchars($keyword)?>" style="max-width:340px">
+                <button class="btn ghost small" type="submit">Cari</button>
+            </form>
+        </div>
+
+        <?php if (count($repositories) == 0): ?>
+            <div class="empty">Belum ada data repository. Tambah manual atau import dari JSON.</div>
+        <?php else: ?>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th class="hide-sm">Bahasa</th>
+                            <th style="width:70px" class="hide-sm">⭐</th>
+                            <th class="hide-sm">Dibuat</th>
+                            <th style="text-align:right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($repositories as $item): ?>
+                            <tr>
+                                <td><span class="title-cell"><?=htmlspecialchars($item['name'])?></span></td>
+                                <td class="hide-sm"><?=htmlspecialchars($item['language'] ?: '-')?></td>
+                                <td class="hide-sm"><?=htmlspecialchars($item['stars'] ?: 0)?></td>
+                                <td class="hide-sm"><?=date('d M Y', strtotime($item['created_at']))?></td>
+                                <td>
+                                    <div class="actions" style="justify-content:flex-end">
+                                        <a href="/admin/repository/edit/<?=$item['id']?>" class="btn ghost small">Edit</a>
+                                        <form method="post" action="/admin/repository/delete/<?=$item['id']?>" onsubmit="return confirm('Yakin hapus repository ini?')">
+                                            <button class="btn danger small" type="submit">Hapus</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <?php if ($repositories->lastPage() > 1): ?>
+                <div class="pagination">
+                    <?php for ($p = 1; $p <= $repositories->lastPage(); $p++): ?>
+                        <a href="/admin/repository?q=<?=urlencode($keyword)?>&page=<?=$p?>"
+                           class="<?=$p==$repositories->currentPage()?'active':''?>"><?=$p?></a>
+                    <?php endfor; ?>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

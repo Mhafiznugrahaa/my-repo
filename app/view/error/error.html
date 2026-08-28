@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?=htmlspecialchars($title)?> — M. Hafiz Nugrahaa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        /* Layout khusus halaman error: benar-benar terpusat & lega */
+        .error-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+        .error-box { max-width: 560px; width: 100%; text-align: center; }
+        .error-code { font-size: 5rem; font-weight: 800; letter-spacing: -0.05em; color: var(--text); line-height: 1; }
+        .error-box h1 { font-size: 1.9rem; margin: 20px 0 14px; }
+        .error-box p.msg { color: var(--muted); font-size: 1.05rem; margin-bottom: 32px; }
+        .error-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+        /* Kotak detail teknis (rapih, bisa dibuka-tutup) */
+        details.detail {
+            margin-top: 40px; text-align: left; border: 1px solid var(--line);
+            border-radius: var(--radius); background: var(--bg-soft); overflow: hidden;
+        }
+        details.detail summary {
+            cursor: pointer; padding: 14px 18px; font-size: .8rem; font-weight: 600;
+            letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+            list-style: none; user-select: none;
+        }
+        details.detail summary::-webkit-details-marker { display: none; }
+        details.detail summary:hover { color: var(--text); }
+        details.detail[open] summary { border-bottom: 1px solid var(--line); }
+        .detail-body { padding: 18px; }
+        .detail-row { margin-bottom: 12px; }
+        .detail-row:last-child { margin-bottom: 0; }
+        .detail-row .k { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+        .detail-row .v {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+            font-size: .82rem; color: var(--text); word-break: break-word; line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="error-wrap">
+    <div class="error-box">
+        <div class="error-code"><?=htmlspecialchars((string)$status)?></div>
+        <h1><?=htmlspecialchars($title)?></h1>
+        <p class="msg"><?=htmlspecialchars($message)?></p>
+
+        <div class="error-actions">
+            <a href="javascript:location.reload()" class="btn">Coba Lagi</a>
+            <a href="/" class="btn outline">Kembali ke Beranda</a>
+        </div>
+
+        <?php if (!empty($detail)): ?>
+            <!-- Detail teknis hanya muncul saat mode debug -->
+            <details class="detail">
+                <summary>Detail Teknis (mode debug)</summary>
+                <div class="detail-body">
+                    <div class="detail-row">
+                        <div class="k">Jenis Error</div>
+                        <div class="v"><?=htmlspecialchars($detail['type'])?></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="k">Pesan</div>
+                        <div class="v"><?=htmlspecialchars($detail['message'])?></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="k">Lokasi</div>
+                        <div class="v"><?=htmlspecialchars($detail['file'])?></div>
+                    </div>
+                </div>
+            </details>
+        <?php endif; ?>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?=htmlspecialchars($info['title'])?> — M. Hafiz Nugrahaa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="container">
+        <a href="/" class="logo">mhafiznugraha</a>
+        <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+        <nav class="nav-links">
+            <a href="/">Beranda</a>
+            <a href="/informasi">Informasi</a>
+            <a href="/portofolio">Portofolio</a>
+            <a href="/tentang">Tentang</a>
+            <?php if ($is_admin): ?>
+                <a href="/admin">Dashboard</a>
+                <a href="/admin/logout">Keluar</a>
+            <?php endif; ?>
+        </nav>
+    </div>
+</header>
+
+<article class="article container">
+    <a href="/informasi" class="back">&larr; Kembali ke Informasi</a>
+    <span class="tag"><?=htmlspecialchars($info['category'])?></span>
+    <h1><?=htmlspecialchars($info['title'])?></h1>
+    <div class="meta">Dipublikasikan <?=date('d F Y', strtotime($info['created_at']))?></div>
+    <?php if (!empty($info['image'])): ?>
+        <img class="article-image" src="<?=htmlspecialchars($info['image'])?>" alt="<?=htmlspecialchars($info['title'])?>">
+    <?php endif; ?>
+    <div class="body"><?=nl2br(htmlspecialchars($info['body']))?></div>
+</article>
+
+<footer class="footer">
+    <div class="container">
+        <div class="logo"> M. Hafiz Nugrahaa</div>
+        <div class="links">
+            <a href="/">Beranda</a>
+            <a href="/informasi">Informasi</a>
+            <a href="/portofolio">Portofolio</a>
+            <a href="/tentang">Tentang</a>
+        </div>
+        <p class="copy">&copy; <?=date('Y')?> M. Hafiz Nugrahaa. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

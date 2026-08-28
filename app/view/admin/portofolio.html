@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kelola Portofolio — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="navbar scrolled">
+    <div class="container">
+        <a href="/admin" class="logo">mhafiznugraha<span style="color:var(--muted);font-weight:500"> / Admin</span></a>
+        <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+        <nav class="nav-links">
+            <a href="/">Lihat Situs</a>
+            <a href="/admin">Informasi</a>
+            <a href="/admin/portofolio">Portofolio</a>
+            <a href="/admin/repository">Repository</a>
+            <a href="/admin/logout">Keluar</a>
+        </nav>
+    </div>
+</header>
+
+<main class="admin-shell">
+    <div class="container">
+        <div class="admin-head">
+            <div>
+                <p class="eyebrow">Halo, <?=htmlspecialchars($admin_name)?></p>
+                <h1>Kelola Portofolio</h1>
+            </div>
+            <a href="/admin/portofolio/create" class="btn">+ Tambah Proyek</a>
+        </div>
+
+        <div class="toolbar">
+            <form method="get" action="/admin/portofolio">
+                <input type="text" name="q" placeholder="Cari judul atau deskripsi…" value="<?=htmlspecialchars($keyword)?>" style="max-width:340px">
+                <button class="btn ghost small" type="submit">Cari</button>
+            </form>
+        </div>
+
+        <?php if (count($portfolios) == 0): ?>
+            <div class="empty">Belum ada data portofolio. Klik <strong>Tambah Proyek</strong> untuk menambahkan.</div>
+        <?php else: ?>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:72px">Gambar</th>
+                            <th>Judul</th>
+                            <th class="hide-sm">Kategori</th>
+                            <th class="hide-sm">Dibuat</th>
+                            <th style="text-align:right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($portfolios as $item): ?>
+                            <tr>
+                                <td>
+                                    <?php if (!empty($item['image'])): ?>
+                                        <img class="thumb" src="<?=htmlspecialchars($item['image'])?>" alt="">
+                                    <?php else: ?>
+                                        <span class="muted" style="font-size:.75rem">—</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><span class="title-cell"><?=htmlspecialchars($item['title'])?></span></td>
+                                <td class="hide-sm"><span class="tag"><?=htmlspecialchars($item['category'])?></span></td>
+                                <td class="hide-sm"><?=date('d M Y', strtotime($item['created_at']))?></td>
+                                <td>
+                                    <div class="actions" style="justify-content:flex-end">
+                                        <a href="/admin/portofolio/edit/<?=$item['id']?>" class="btn ghost small">Edit</a>
+                                        <form method="post" action="/admin/portofolio/delete/<?=$item['id']?>" onsubmit="return confirm('Yakin hapus proyek ini?')">
+                                            <button class="btn danger small" type="submit">Hapus</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <?php if ($portfolios->lastPage() > 1): ?>
+                <div class="pagination">
+                    <?php for ($p = 1; $p <= $portfolios->lastPage(); $p++): ?>
+                        <a href="/admin/portofolio?q=<?=urlencode($keyword)?>&page=<?=$p?>"
+                           class="<?=$p==$portfolios->currentPage()?'active':''?>"><?=$p?></a>
+                    <?php endfor; ?>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

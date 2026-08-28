@@ -1,0 +1,637 @@
+{
+  "url": "https://github.com/Mhafiznugrahaa?tab=repositories",
+  "status_code": 200,
+  "page_type": "repository",
+  "title": "Mhafiznugrahaa - Repositories",
+  "description": "Learning, Coding, Sleeping EveryWhere!! Mhafiznugrahaa has 24 repositories available. Follow their code on GitHub.",
+  "items": [
+    {
+      "title": "ai-agent-lab",
+      "description": "AI Agent Lab adalah sandbox pembelajaran untuk membangun AI Agent mandiri yang mampu berpikir, memanggil tool, dan menjawab pertanyaan layaknya asisten pribadi (Jarvis-style) melalui antarmuka term…",
+      "link": "https://github.com/Mhafiznugrahaa/ai-agent-lab",
+      "image_url": null,
+      "metadata": {
+        "language": "Python"
+      }
+    },
+    {
+      "title": "rag-agent",
+      "description": "An enterprise RAG agent built with React, Vite, and the OpenAI Agents SDK. Process PDF documents into a local knowledge base and answer questions with citations.",
+      "link": "https://github.com/Mhafiznugrahaa/rag-agent",
+      "image_url": null,
+      "metadata": {
+        "language": "TypeScript"
+      }
+    },
+    {
+      "title": "ITEnglishLearn",
+      "description": "TechEnglish adalah sebuah prototype aplikasi Android/iOS yang dirancang khusus untuk membantu mahasiswa Teknologi Informasi (IT) menguasai bahasa Inggris teknis. Aplikasi ini berfokus pada kebutuha…",
+      "link": "https://github.com/Mhafiznugrahaa/ITEnglishLearn",
+      "image_url": null,
+      "metadata": {
+        "language": "Dart"
+      }
+    },
+    {
+      "title": "tugas_besar_ppb",
+      "description": null,
+      "link": "https://github.com/Mhafiznugrahaa/tugas_besar_ppb",
+      "image_url": null,
+      "metadata": {
+        "language": "Dart"
+      }
+    },
+    {
+      "title": "batch_8_task",
+      "description": "all of my task",
+      "link": "https://github.com/Mhafiznugrahaa/batch_8_task",
+      "image_url": null,
+      "metadata": {
+        "language": "Dart"
+      }
+    },
+    {
+      "title": "data-tier-file-sql",
+      "description": "database mysql 100k data barang",
+      "link": "https://github.com/Mhafiznugrahaa/data-tier-file-sql",
+      "image_url": null,
+      "metadata": {}
+    },
+    {
+      "title": "aplication-architecture-2-tier",
+      "description": "Tujuan pembuatan aplikasi ini adalah untuk mempermudah proses pencatatan, pemantauan, dan pengelolaan data barang yang tersimpan di gudang, sehingga staff gudang dapat melakukan operasi CRUD (Creat…",
+      "link": "https://github.com/Mhafiznugrahaa/aplication-architecture-2-tier",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "belajar-dart2",
+      "description": null,
+      "link": "https://github.com/Mhafiznugrahaa/belajar-dart2",
+      "image_url": null,
+      "metadata": {
+        "language": "Dart"
+      }
+    },
+    {
+      "title": "belajar-dart",
+      "description": null,
+      "link": "https://github.com/Mhafiznugrahaa/belajar-dart",
+      "image_url": null,
+      "metadata": {
+        "language": "Dart"
+      }
+    },
+    {
+      "title": "konsep-solid-PBO",
+      "description": "Single Responsibility Principle, Open/Closed Principle, Liskov Substitution Principle, Interface Segregation Principle, Dependency Inversion Principle",
+      "link": "https://github.com/Mhafiznugrahaa/konsep-solid-PBO",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "laravel-donation-midtrans",
+      "description": "Integrasi sistem donasi Laravel dengan Midtrans Snap API (Sandbox) untuk memproses pembayaran otomatis dan menyimpan data transaksi ke database. Aplikasi berjalan lokal di Laragon/XAMPP, dan Ngrok …",
+      "link": "https://github.com/Mhafiznugrahaa/laravel-donation-midtrans",
+      "image_url": null,
+      "metadata": {
+        "language": "Blade"
+      }
+    },
+    {
+      "title": "UTS-PBO",
+      "description": "25/10/2025 \"uts pbo (aplikasi peminjaman laptop berbasis console)\"",
+      "link": "https://github.com/Mhafiznugrahaa/UTS-PBO",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "Abstract",
+      "description": "PBO-praktikum-5",
+      "link": "https://github.com/Mhafiznugrahaa/Abstract",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "Poliymorphism",
+      "description": "praktikum-5",
+      "link": "https://github.com/Mhafiznugrahaa/Poliymorphism",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "Single-Inheritance",
+      "description": "PBO",
+      "link": "https://github.com/Mhafiznugrahaa/Single-Inheritance",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "Multiple-Inheritance",
+      "description": "PBO",
+      "link": "https://github.com/Mhafiznugrahaa/Multiple-Inheritance",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "Multilevel-Inheritance",
+      "description": "PBO",
+      "link": "https://github.com/Mhafiznugrahaa/Multilevel-Inheritance",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "Hybrid-Inheritance",
+      "description": "PBO",
+      "link": "https://github.com/Mhafiznugrahaa/Hybrid-Inheritance",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "Hierarchical-Inheritance",
+      "description": "PBO",
+      "link": "https://github.com/Mhafiznugrahaa/Hierarchical-Inheritance",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "encapsulation",
+      "description": null,
+      "link": "https://github.com/Mhafiznugrahaa/encapsulation",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "project-letdown",
+      "description": null,
+      "link": "https://github.com/Mhafiznugrahaa/project-letdown",
+      "image_url": null,
+      "metadata": {
+        "language": "Python"
+      }
+    },
+    {
+      "title": "praktikum-3",
+      "description": "dasar-pemrograman-java",
+      "link": "https://github.com/Mhafiznugrahaa/praktikum-3",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "tugas-pbo",
+      "description": null,
+      "link": "https://github.com/Mhafiznugrahaa/tugas-pbo",
+      "image_url": null,
+      "metadata": {
+        "language": "Java"
+      }
+    },
+    {
+      "title": "struktur-data",
+      "description": null,
+      "link": "https://github.com/Mhafiznugrahaa/struktur-data",
+      "image_url": null,
+      "metadata": {
+        "language": "C++"
+      }
+    }
+  ],
+  "tables": [],
+  "links": [
+    {
+      "text": "[image]",
+      "url": "https://github.com/"
+    },
+    {
+      "text": "Sign in",
+      "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FMhafiznugrahaa%3Ftab%3Drepositories"
+    },
+    {
+      "text": "GitHub CopilotWrite better code with AI",
+      "url": "https://github.com/features/copilot"
+    },
+    {
+      "text": "GitHub Copilot appDirect agents from issue to merge",
+      "url": "https://github.com/features/ai/github-app"
+    },
+    {
+      "text": "MCP RegistryNewIntegrate external tools",
+      "url": "https://github.com/mcp"
+    },
+    {
+      "text": "ActionsAutomate any workflow",
+      "url": "https://github.com/features/actions"
+    },
+    {
+      "text": "CodespacesInstant dev environments",
+      "url": "https://github.com/features/codespaces"
+    },
+    {
+      "text": "IssuesPlan and track work",
+      "url": "https://github.com/features/issues"
+    },
+    {
+      "text": "Code ReviewManage code changes",
+      "url": "https://github.com/features/code-review"
+    },
+    {
+      "text": "GitHub Advanced SecurityFind and fix vulnerabilities",
+      "url": "https://github.com/security/advanced-security"
+    },
+    {
+      "text": "Code securitySecure your code as you build",
+      "url": "https://github.com/security/advanced-security/code-security"
+    },
+    {
+      "text": "Secret protectionStop leaks before they start",
+      "url": "https://github.com/security/advanced-security/secret-protection"
+    },
+    {
+      "text": "Why GitHub",
+      "url": "https://github.com/why-github"
+    },
+    {
+      "text": "Documentation",
+      "url": "https://docs.github.com"
+    },
+    {
+      "text": "Blog",
+      "url": "https://github.blog"
+    },
+    {
+      "text": "Changelog",
+      "url": "https://github.blog/changelog"
+    },
+    {
+      "text": "Marketplace",
+      "url": "https://github.com/marketplace"
+    },
+    {
+      "text": "View all features",
+      "url": "https://github.com/features"
+    },
+    {
+      "text": "Enterprises",
+      "url": "https://github.com/enterprise"
+    },
+    {
+      "text": "Small and medium teams",
+      "url": "https://github.com/team"
+    },
+    {
+      "text": "Startups",
+      "url": "https://github.com/enterprise/startups"
+    },
+    {
+      "text": "Nonprofits",
+      "url": "https://github.com/solutions/industry/nonprofits"
+    },
+    {
+      "text": "App Modernization",
+      "url": "https://github.com/solutions/use-case/app-modernization"
+    },
+    {
+      "text": "DevSecOps",
+      "url": "https://github.com/solutions/use-case/devsecops"
+    },
+    {
+      "text": "DevOps",
+      "url": "https://github.com/solutions/use-case/devops"
+    },
+    {
+      "text": "CI/CD",
+      "url": "https://github.com/solutions/use-case/ci-cd"
+    },
+    {
+      "text": "View all use cases",
+      "url": "https://github.com/solutions/use-case"
+    },
+    {
+      "text": "Healthcare",
+      "url": "https://github.com/solutions/industry/healthcare"
+    },
+    {
+      "text": "Financial services",
+      "url": "https://github.com/solutions/industry/financial-services"
+    },
+    {
+      "text": "Manufacturing",
+      "url": "https://github.com/solutions/industry/manufacturing"
+    },
+    {
+      "text": "Government",
+      "url": "https://github.com/solutions/industry/government"
+    },
+    {
+      "text": "View all industries",
+      "url": "https://github.com/solutions/industry"
+    },
+    {
+      "text": "View all solutions",
+      "url": "https://github.com/solutions"
+    },
+    {
+      "text": "AI",
+      "url": "https://github.com/resources/articles?topic=ai"
+    },
+    {
+      "text": "Software Development",
+      "url": "https://github.com/resources/articles?topic=software-development"
+    },
+    {
+      "text": "DevOps",
+      "url": "https://github.com/resources/articles?topic=devops"
+    },
+    {
+      "text": "Security",
+      "url": "https://github.com/resources/articles?topic=security"
+    },
+    {
+      "text": "View all topics",
+      "url": "https://github.com/resources/articles"
+    },
+    {
+      "text": "Customer stories",
+      "url": "https://github.com/customer-stories"
+    },
+    {
+      "text": "Events & webinars",
+      "url": "https://github.com/resources/events"
+    },
+    {
+      "text": "Ebooks & reports",
+      "url": "https://github.com/resources/whitepapers"
+    },
+    {
+      "text": "Business insights",
+      "url": "https://github.com/solutions/executive-insights"
+    },
+    {
+      "text": "GitHub Skills",
+      "url": "https://skills.github.com"
+    },
+    {
+      "text": "Customer support",
+      "url": "https://support.github.com"
+    },
+    {
+      "text": "Community forum",
+      "url": "https://github.com/orgs/community/discussions"
+    },
+    {
+      "text": "Trust center",
+      "url": "https://github.com/trust-center"
+    },
+    {
+      "text": "Partners",
+      "url": "https://github.com/partners"
+    },
+    {
+      "text": "View all resources",
+      "url": "https://github.com/resources"
+    },
+    {
+      "text": "GitHub SponsorsFund open source developers",
+      "url": "https://github.com/open-source/sponsors"
+    },
+    {
+      "text": "Security Lab",
+      "url": "https://securitylab.github.com"
+    },
+    {
+      "text": "Maintainer Community",
+      "url": "https://maintainers.github.com"
+    },
+    {
+      "text": "Accelerator",
+      "url": "https://github.com/open-source/accelerator"
+    },
+    {
+      "text": "GitHub Stars",
+      "url": "https://stars.github.com"
+    },
+    {
+      "text": "Archive Program",
+      "url": "https://archiveprogram.github.com"
+    },
+    {
+      "text": "Topics",
+      "url": "https://github.com/topics"
+    },
+    {
+      "text": "Trending",
+      "url": "https://github.com/trending"
+    },
+    {
+      "text": "Collections",
+      "url": "https://github.com/collections"
+    },
+    {
+      "text": "Copilot for BusinessEnterprise-grade AI features",
+      "url": "https://github.com/features/copilot/copilot-business"
+    },
+    {
+      "text": "Premium SupportEnterprise-grade 24/7 support",
+      "url": "https://github.com/enterprise/premium-support"
+    },
+    {
+      "text": "Pricing",
+      "url": "https://github.com/pricing"
+    },
+    {
+      "text": "Search syntax tips",
+      "url": "https://docs.github.com/search-github/github-code-search/understanding-github-code-search-syntax"
+    },
+    {
+      "text": "Sign up",
+      "url": "https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2FMhafiznugrahaa&source=header"
+    },
+    {
+      "text": "Reload",
+      "url": "https://github.com/Mhafiznugrahaa?tab=repositories"
+    },
+    {
+      "text": "Overview",
+      "url": "https://github.com/Mhafiznugrahaa"
+    },
+    {
+      "text": "Projects 0",
+      "url": "https://github.com/Mhafiznugrahaa?tab=projects"
+    },
+    {
+      "text": "Packages 0",
+      "url": "https://github.com/Mhafiznugrahaa?tab=packages"
+    },
+    {
+      "text": "Stars 31",
+      "url": "https://github.com/Mhafiznugrahaa?tab=stars"
+    },
+    {
+      "text": "[image]",
+      "url": "https://avatars.githubusercontent.com/u/188332725?v=4"
+    },
+    {
+      "text": "4 followers",
+      "url": "https://github.com/Mhafiznugrahaa?tab=followers"
+    },
+    {
+      "text": "9 following",
+      "url": "https://github.com/Mhafiznugrahaa?tab=following"
+    },
+    {
+      "text": "blocking users",
+      "url": "https://docs.github.com/articles/blocking-a-user-from-your-personal-account"
+    },
+    {
+      "text": "reporting abuse",
+      "url": "https://docs.github.com/articles/reporting-abuse-or-spam"
+    },
+    {
+      "text": "Report abuse",
+      "url": "https://github.com/contact/report-abuse?report=Mhafiznugrahaa+%28user%29"
+    },
+    {
+      "text": "ai-agent-lab",
+      "url": "https://github.com/Mhafiznugrahaa/ai-agent-lab"
+    },
+    {
+      "text": "rag-agent",
+      "url": "https://github.com/Mhafiznugrahaa/rag-agent"
+    },
+    {
+      "text": "ITEnglishLearn",
+      "url": "https://github.com/Mhafiznugrahaa/ITEnglishLearn"
+    },
+    {
+      "text": "tugas_besar_ppb",
+      "url": "https://github.com/Mhafiznugrahaa/tugas_besar_ppb"
+    },
+    {
+      "text": "batch_8_task",
+      "url": "https://github.com/Mhafiznugrahaa/batch_8_task"
+    },
+    {
+      "text": "data-tier-file-sql",
+      "url": "https://github.com/Mhafiznugrahaa/data-tier-file-sql"
+    },
+    {
+      "text": "aplication-architecture-2-tier",
+      "url": "https://github.com/Mhafiznugrahaa/aplication-architecture-2-tier"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/aplication-architecture-2-tier/stargazers"
+    },
+    {
+      "text": "belajar-dart2",
+      "url": "https://github.com/Mhafiznugrahaa/belajar-dart2"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/belajar-dart2/stargazers"
+    },
+    {
+      "text": "belajar-dart",
+      "url": "https://github.com/Mhafiznugrahaa/belajar-dart"
+    },
+    {
+      "text": "konsep-solid-PBO",
+      "url": "https://github.com/Mhafiznugrahaa/konsep-solid-PBO"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/konsep-solid-PBO/stargazers"
+    },
+    {
+      "text": "laravel-donation-midtrans",
+      "url": "https://github.com/Mhafiznugrahaa/laravel-donation-midtrans"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/laravel-donation-midtrans/stargazers"
+    },
+    {
+      "text": "UTS-PBO",
+      "url": "https://github.com/Mhafiznugrahaa/UTS-PBO"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/UTS-PBO/stargazers"
+    },
+    {
+      "text": "Abstract",
+      "url": "https://github.com/Mhafiznugrahaa/Abstract"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/Abstract/stargazers"
+    },
+    {
+      "text": "Poliymorphism",
+      "url": "https://github.com/Mhafiznugrahaa/Poliymorphism"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/Poliymorphism/stargazers"
+    },
+    {
+      "text": "Single-Inheritance",
+      "url": "https://github.com/Mhafiznugrahaa/Single-Inheritance"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/Single-Inheritance/stargazers"
+    },
+    {
+      "text": "Multiple-Inheritance",
+      "url": "https://github.com/Mhafiznugrahaa/Multiple-Inheritance"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/Multiple-Inheritance/stargazers"
+    },
+    {
+      "text": "Multilevel-Inheritance",
+      "url": "https://github.com/Mhafiznugrahaa/Multilevel-Inheritance"
+    },
+    {
+      "text": "1",
+      "url": "https://github.com/Mhafiznugrahaa/Multilevel-Inheritance/stargazers"
+    }
+  ],
+  "images": [
+    {
+      "alt": "@Mhafiznugrahaa",
+      "url": "https://avatars.githubusercontent.com/u/188332725?s=64&v=4"
+    },
+    {
+      "alt": "View Mhafiznugrahaa's full-sized avatar",
+      "url": "https://avatars.githubusercontent.com/u/188332725?v=4"
+    }
+  ],
+  "error": null
+}

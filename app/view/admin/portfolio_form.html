@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?=isset($portfolio) && isset($portfolio->id) ? 'Edit' : 'Tambah'?> Proyek — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="navbar scrolled">
+    <div class="container">
+        <a href="/admin" class="logo">mhafiznugraha<span style="color:var(--muted);font-weight:500"> / Admin</span></a>
+        <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+        <nav class="nav-links">
+            <a href="/">Lihat Situs</a>
+            <a href="/admin">Informasi</a>
+            <a href="/admin/portofolio">Portofolio</a>
+            <a href="/admin/repository">Repository</a>
+            <a href="/admin/logout">Keluar</a>
+        </nav>
+    </div>
+</header>
+
+<main class="admin-shell">
+    <div class="container">
+        <div class="admin-head">
+            <div>
+                <p class="eyebrow"><a href="/admin/portofolio" class="muted">&larr; Kembali ke daftar</a></p>
+                <h1><?=isset($portfolio) && isset($portfolio->id) ? 'Edit Proyek' : 'Tambah Proyek Baru'?></h1>
+            </div>
+        </div>
+
+        <div class="panel">
+            <form method="post" enctype="multipart/form-data"
+                  action="<?=isset($portfolio) && isset($portfolio->id) ? '/admin/portofolio/update/'.$portfolio->id : '/admin/portofolio/store'?>">
+
+                <div class="field">
+                    <label>Judul Proyek</label>
+                    <input type="text" name="title"
+                           value="<?=isset($portfolio) && $portfolio ? htmlspecialchars($portfolio->title ?? '') : ''?>"
+                           placeholder="Nama proyek">
+                    <?php if (!empty($errors['title'])): ?><div class="error"><?=htmlspecialchars($errors['title'])?></div><?php endif; ?>
+                </div>
+
+                <div class="field">
+                    <label>Kategori</label>
+                    <input type="text" name="category"
+                           value="<?=isset($portfolio) && $portfolio ? htmlspecialchars($portfolio->category ?? '') : ''?>"
+                           placeholder="Misal: Web, Mobile, AI">
+                </div>
+
+                <div class="field">
+                    <label>Deskripsi</label>
+                    <textarea name="description" placeholder="Deskripsi proyek…"><?=isset($portfolio) && $portfolio ? htmlspecialchars($portfolio->description ?? '') : ''?></textarea>
+                </div>
+
+                <div class="field">
+                    <label>URL Proyek <span style="text-transform:none;letter-spacing:0;font-weight:400">(opsional)</span></label>
+                    <input type="url" name="project_url"
+                           value="<?=isset($portfolio) && $portfolio ? htmlspecialchars($portfolio->project_url ?? '') : ''?>"
+                           placeholder="https://github.com/username/proyek">
+                </div>
+
+                <div class="field">
+                    <label>Gambar <span style="text-transform:none;letter-spacing:0;font-weight:400">(opsional · jpg, png, gif, webp · maks 2MB)</span></label>
+
+                    <?php $currentImage = isset($portfolio) && $portfolio ? ($portfolio->image ?? '') : ''; ?>
+                    <?php if ($currentImage): ?>
+                        <div class="img-preview">
+                            <img src="<?=htmlspecialchars($currentImage)?>" alt="Gambar saat ini">
+                            <label class="remove-check">
+                                <input type="checkbox" name="remove_image" value="1"> Hapus gambar ini
+                            </label>
+                        </div>
+                    <?php endif; ?>
+
+                    <input type="file" name="image" accept="image/*" id="imageInput">
+                    <div id="newPreview" class="img-preview" style="display:none">
+                        <img src="" alt="Pratinjau">
+                    </div>
+
+                    <?php if (!empty($errors['image'])): ?><div class="error"><?=htmlspecialchars($errors['image'])?></div><?php endif; ?>
+                </div>
+
+                <div style="display:flex;gap:12px;margin-top:8px">
+                    <button class="btn" type="submit">Simpan</button>
+                    <a href="/admin/portofolio" class="btn ghost">Batal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script src="/app.js"></script>
+<script>
+    (function () {
+        var input = document.getElementById('imageInput');
+        var box = document.getElementById('newPreview');
+        if (!input || !box) return;
+        var img = box.querySelector('img');
+        input.addEventListener('change', function () {
+            var file = this.files && this.files[0];
+            if (!file) { box.style.display = 'none'; return; }
+            img.src = URL.createObjectURL(file);
+            box.style.display = 'block';
+        });
+    })();
+</script>
+</body>
+</html>

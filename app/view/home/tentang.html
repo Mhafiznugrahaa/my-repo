@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tentang — M. Hafiz Nugrahaa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .about-profile { display: flex; gap: 48px; align-items: flex-start; margin-bottom: 64px; }
+        .about-avatar { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 2px solid var(--line); flex-shrink: 0; }
+        .about-text h2 { margin-bottom: 16px; }
+        .about-text p { margin-bottom: 16px; }
+        .contact-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+        .contact-links a { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+        .repo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .repo-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+        .repo-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.05); }
+        .repo-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+        .repo-card h3 a { color: var(--text); }
+        .repo-card p { font-size: .85rem; color: var(--text-soft); margin-bottom: 12px; }
+        .repo-meta { display: flex; align-items: center; gap: 16px; font-size: .8rem; color: var(--muted); }
+        .lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+        @media (max-width: 640px) {
+            .about-profile { flex-direction: column; align-items: center; text-align: center; }
+            .contact-links { justify-content: center; }
+            .repo-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="container">
+        <a href="/" class="logo">mhafiznugraha</a>
+        <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+        <nav class="nav-links">
+            <a href="/">Beranda</a>
+            <a href="/informasi">Informasi</a>
+            <a href="/portofolio">Portofolio</a>
+            <a href="/tentang" class="active">Tentang</a>
+            <?php if ($is_admin): ?>
+                <a href="/admin">Dashboard</a>
+                <a href="/admin/logout">Keluar</a>
+            <?php endif; ?>
+        </nav>
+    </div>
+</header>
+
+<div class="page-header">
+    <div class="container">
+        <p class="eyebrow">Tentang</p>
+        <!-- <h1>Tentang Saya & Website Ini</h1> -->
+    </div>
+</div>
+
+<section class="section" style="padding-top:0">
+    <div class="container">
+        <div class="about-profile">
+            <img src="https://avatars.githubusercontent.com/u/188332725?v=4" alt="M. Hafiz Nugrahaa" class="about-avatar">
+            <div class="about-text">
+                <h2>M. Hafiz Nugrahaa</h2>
+                <p>
+                    Seorang mahasiswa Teknologi Informasi yang antusias dalam pengembangan perangkat lunak,
+                    khususnya di bidang web development, AI Agent, dan mobile applications.
+                    Motto saya: <em>Learning, Coding, Sleeping Everywhere!</em>
+                </p>
+                <p>
+                    Website ini adalah portal portofolio personal yang menampilkan proyek-proyek,
+                    catatan teknis, dan informasi seputar perjalanan saya di dunia teknologi.
+                    Dibangun menggunakan <strong>Webman</strong> (PHP + Workerman) dengan desain minimalis putih yang bersih.
+                </p>
+                <div class="contact-links">
+                    <a href="mailto:mhafiznugrahaa@example.com" class="btn outline small">Email</a>
+                    <a href="https://github.com/Mhafiznugrahaa" target="_blank" class="btn outline small">GitHub</a>
+                    <a href="https://linkedin.com/in/mhafiznugrahaa" target="_blank" class="btn outline small">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section soft">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">GitHub</p>
+            <h2>Repository Terbaru</h2>
+        </div>
+
+        <?php if (count($repositories) > 0): ?>
+            <div class="repo-grid">
+                <?php foreach ($repositories as $repo): ?>
+                    <div class="repo-card">
+                        <h3><a href="<?=htmlspecialchars($repo['github_url'] ?: '#')?>" target="_blank"><?=htmlspecialchars($repo['name'])?></a></h3>
+                        <p><?=htmlspecialchars(mb_substr($repo['description'] ?: '-', 0, 120))?></p>
+                        <div class="repo-meta">
+                            <?php if (!empty($repo['language'])): ?>
+                                <span><span class="lang-dot" style="background:#3572A5"></span><?=htmlspecialchars($repo['language'])?></span>
+                            <?php endif; ?>
+                            <span>⭐ <?=htmlspecialchars($repo['stars'] ?: 0)?></span>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p class="center muted">Belum ada repository. Admin dapat mengimpor dari data JSON melalui dashboard.</p>
+        <?php endif; ?>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div class="logo"> M. Hafiz Nugrahaa</div>
+        <div class="links">
+            <a href="/">Beranda</a>
+            <a href="/informasi">Informasi</a>
+            <a href="/portofolio">Portofolio</a>
+            <a href="/tentang">Tentang</a>
+        </div>
+        <p class="copy">&copy; <?=date('Y')?> M. Hafiz Nugrahaa. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

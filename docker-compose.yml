@@ -1,0 +1,30 @@
+services:
+  mydb:
+    image: mysql:8
+    container_name: mydb
+    environment:
+      MYSQL_ROOT_PASSWORD: Hafiz123
+      MYSQL_DATABASE: webman_info
+    ports:
+      - "3307:3306"
+    volumes:
+      - mydb-data:/var/lib/mysql
+
+  webman:
+    build: .
+    container_name: my-webman
+    ports:
+      - "8888:8787"
+    depends_on:
+      - mydb
+
+  frontend:
+    build: ./frontend
+    container_name: my-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - webman
+
+volumes:
+  mydb-data:

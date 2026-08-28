@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  transition: background-color 0.5s ease, color 0.3s ease;
+}
+
+body {
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#container {
+  transition: background-color 0.5s ease;
+}
+
+@layer base {
+  h1, h2, h3, h4 { @apply text-[#111] dark:text-white font-bold tracking-tight; }
+  h1 { @apply text-4xl sm:text-5xl lg:text-6xl leading-[1.08]; }
+  h2 { @apply text-3xl sm:text-4xl leading-[1.12]; }
+  h3 { @apply text-xl sm:text-2xl; }
+  a { @apply text-[#111] dark:text-white no-underline transition-all duration-300; }
+  a:hover { @apply opacity-70; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold 
+           border-2 border-[#111] dark:border-white bg-[#111] dark:bg-white text-white dark:text-[#111] rounded-none
+           transition-all duration-300 ease-out
+           hover:bg-white hover:text-[#111] dark:hover:bg-transparent dark:hover:text-white
+           hover:shadow-[0_2px_20px_rgba(0,0,0,0.06)];
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold 
+           border-2 border-[#111] dark:border-white/70 bg-transparent text-[#111] dark:text-white/90 rounded-none
+           transition-all duration-300 ease-out
+           hover:bg-[#111] hover:text-white dark:hover:bg-white dark:hover:text-[#111]
+           hover:shadow-[0_2px_20px_rgba(0,0,0,0.06)];
+  }
+  .btn-sm {
+    @apply px-5 py-2 text-xs;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-5 py-2 text-xs font-semibold 
+           border border-[#ececec] dark:border-white/10 bg-white dark:bg-transparent text-[#111] dark:text-white/80 rounded-none
+           transition-all duration-300 ease-out
+           hover:border-[#111] dark:hover:border-white hover:bg-white dark:hover:bg-white/5;
+  }
+  .eyebrow {
+    @apply text-[11px] tracking-[0.25em] uppercase text-[#8a8a8a] dark:text-white/40 font-semibold;
+  }
+  .card-hover {
+    @apply transition-all duration-500 ease-out;
+  }
+  .card-hover:hover {
+    @apply -translate-y-[3px] shadow-[0_12px_40px_rgba(0,0,0,0.06)] dark:shadow-[0_12px_40px_rgba(255,255,255,0.03)];
+  }
+  .container-wide {
+    @apply w-full max-w-[1200px] mx-auto px-6 sm:px-10;
+  }
+  .section-space {
+    @apply py-24 sm:py-32;
+  }
+  .section-space-sm {
+    @apply py-20 sm:py-24;
+  }
+  .tag-pill {
+    @apply inline-flex text-[10px] tracking-[0.18em] uppercase font-semibold 
+           border border-[#ececec] dark:border-white/10 px-3 py-1.5 text-[#8a8a8a] dark:text-white/50 rounded-full;
+  }
+  .tag-solid {
+    @apply inline-flex text-[10px] tracking-[0.18em] uppercase font-semibold 
+           bg-[#111] dark:bg-white text-white dark:text-[#111] px-3 py-1.5 rounded-full;
+  }
+}
+
+@layer utilities {
+  .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+

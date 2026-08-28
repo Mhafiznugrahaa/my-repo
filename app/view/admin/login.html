@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login — M. Hafiz Nugrahaa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="auth-wrap">
+    <div class="auth-card">
+        <a href="/" class="logo">mhafiznugraha</a>
+        <h1>Masuk Admin</h1>
+        <p class="sub">Hanya admin yang dapat mengelola konten.</p>
+
+        <?php if (!empty($error)): ?>
+            <div class="alert"><?=htmlspecialchars($error)?></div>
+        <?php endif; ?>
+
+        <form method="post" action="/admin/login">
+            <div class="field">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="admin" autofocus>
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••">
+            </div>
+            <button class="btn" type="submit">Masuk</button>
+        </form>
+
+        <p class="foot"><a href="/">&larr; Kembali ke beranda</a></p>
+    </div>
+</div>
+
+</body>
+</html>
