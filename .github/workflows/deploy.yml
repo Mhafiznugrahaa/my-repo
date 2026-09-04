@@ -16,7 +16,11 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          script_stop: true
           script: |
+            set -e
             cd ~/my-repo
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd
             sudo docker compose up -d --build
