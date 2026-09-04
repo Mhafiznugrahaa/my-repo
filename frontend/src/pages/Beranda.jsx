@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
-import { getHome } from '../api'
 import { motion } from 'framer-motion'
-import KineticText from '../components/KineticText'
-import FloatingDock from '../components/FloatingDock'
+import { getTentang, getHome } from '../api'
 import { PrimaryButton, SecondaryButton, TertiaryButton } from '../components/Buttons'
-import TextPressure from '../components/TextPressure'
 import { useTheme } from '../lib/theme-context'
+import ViewCounter from '../components/ViewCounter'
+
+const KineticText = lazy(() => import('../components/KineticText'))
+const FloatingDock = lazy(() => import('../components/FloatingDock'))
+const TextPressure = lazy(() => import('../components/TextPressure'))
 
 function ProjectCard({ item }) {
   return (
@@ -69,7 +71,19 @@ export default function Beranda() {
   const [data, setData] = useState(null)
   const { theme } = useTheme()
 
-  useEffect(() => { getHome().then(setData).catch(() => {}) }, [])
+  useEffect(() => {
+    // Mengambil data secara paralel agar tidak menimpa satu sama lain
+    Promise.all([getHome(), getTentang()])
+      .then(([homeRes, tentangRes]) => {
+        setData({
+          ...homeRes,
+          profile: tentangRes?.profile || homeRes?.profile,
+        })
+      })
+      .catch((err) => console.error('Error fetching data:', err))
+  }, [])
+
+  const p = data?.profile
 
   return (
     <>
@@ -82,27 +96,31 @@ export default function Beranda() {
             <div className="max-w-[820px]">
               <div className="eyebrow mb-2">Personal Portfolio</div>
 
-              {/* 1. Kurangi tinggi container TextPressure agar ruang kosong di bawah nama berkurang */}
               <div className="h-[50px] sm:h-[70px] lg:h-[90px] w-full">
-                <TextPressure
-                  text="mhafiznugraha"
-                  textColor={theme === 'dark' ? '#ffffff' : '#111111'}
-                  minFontSize={26}
-                  maxFontSize={72}
-                  width
-                  weight
-                  italic
-                  stroke={false}
-                  flex
-                />
+                <Suspense fallback={<div className="h-full w-full" />}>
+                  <TextPressure
+                    text="mhafiznugraha"
+                    textColor={theme === 'dark' ? '#ffffff' : '#111111'}
+                    minFontSize={26}
+                    maxFontSize={72}
+                    width
+                    weight
+                    italic
+                    stroke={false}
+                    flex
+                  />
+                </Suspense>
               </div>
 
-              {/* 2. Ubah mt-6 jadi mt-2 agar rapat dengan nama */}
-              <KineticText
-                text="Mahasiswa Teknologi Informasi yang antusias dalam pengembangan web, AI Agent, dan mobile apps."
-                as="p"
-                className="mt-2 text-base sm:text-lg text-[#555] dark:text-white/60 leading-relaxed max-w-[500px]"
-              />
+              {p?.bio && (
+                <Suspense fallback={<p className="mt-2 text-base sm:text-lg text-[#555] dark:text-white/60 leading-relaxed max-w-[500px] animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded" />}>
+                  <KineticText
+                    text={p.bio}
+                    as="p"
+                    className="mt-2 text-base sm:text-lg text-[#555] dark:text-white/60 leading-relaxed max-w-[500px]"
+                  />
+                </Suspense>
+              )}
 
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
@@ -113,12 +131,10 @@ export default function Beranda() {
                 Learning, Coding, Sleeping Everywhere.
               </motion.p>
 
-              {/* 3. Gunakan justify-start & gap-3/gap-4 agar 2 tombol selalu berdekatan di kiri */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 1.5 }}
-                /* gap-[5px] untuk jarak pas 5px, justify-start & w-fit agar tidak melebar */
                 className="inline-flex items-center justify-start gap-[20px] mt-6 w-fit"
               >
                 <div className="w-fit">
@@ -126,6 +142,9 @@ export default function Beranda() {
                 </div>
                 <div className="w-fit">
                   <SecondaryButton as="link" to="/tentang">Tentang Saya</SecondaryButton>
+                </div>
+                <div className="w-fit self-center">
+                  <ViewCounter page="tentang" className="ml-4" />
                 </div>
               </motion.div>
             </div>
@@ -137,7 +156,9 @@ export default function Beranda() {
               transition={{ duration: 0.7, delay: 0.5, ease: [0.2, 0.65, 0.3, 0.9] }}
               className="flex justify-center md:justify-end"
             >
-              <FloatingDock className="w-full max-w-[420px]" />
+              <Suspense fallback={<div className="w-full max-w-[420px] h-[420px] animate-pulse bg-gray-200 dark:bg-gray-700 rounded-2xl" />}>
+                <FloatingDock className="w-full max-w-[420px]" />
+              </Suspense>
             </motion.div>
 
           </div>

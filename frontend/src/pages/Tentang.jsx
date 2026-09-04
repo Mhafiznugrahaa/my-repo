@@ -64,6 +64,7 @@ export default function Tentang() {
               <h1 className="text-[24px] font-semibold text-[#1F2328] dark:text-white mt-4 leading-tight">{p?.name}</h1>
               <p className="text-[#656d76] dark:text-white/50 text-[16px] mt-0.5">{p?.username ? `@${p.username}` : ''}</p>
               <p className="text-[14px] text-[#1F2328] dark:text-white/80 mt-4 leading-[1.5]">{p?.bio}</p>
+              {/* <p className="text-[#656d76] dark:text-white/50 text-[16px] mt-0.5">{p?.role ? `${p.role}` : ''}</p> */}
 
               <div className="mt-6 space-y-2">
                 {socials.map(s => {

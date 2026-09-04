@@ -1,24 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { authCheck } from './api'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import PageTransition from './components/PageTransition'
-import Beranda from './pages/Beranda'
-import Informasi from './pages/Informasi'
-import InfoDetail from './pages/InfoDetail'
-import Portofolio from './pages/Portofolio'
-import PortofolioDetail from './pages/PortofolioDetail'
-import Tentang from './pages/Tentang'
-import AdminLogin from './pages/admin/Login'
-import AdminInformasi from './pages/admin/AdminInformasi'
-import AdminPortfolio from './pages/admin/AdminPortfolio'
-import AdminRepository from './pages/admin/AdminRepository'
 import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { ThemeProvider } from './lib/theme-context'
 import { Particles } from './components/Particles'
+
+const Beranda = lazy(() => import('./pages/Beranda'))
+const Informasi = lazy(() => import('./pages/Informasi'))
+const InfoDetail = lazy(() => import('./pages/InfoDetail'))
+const Portofolio = lazy(() => import('./pages/Portofolio'))
+const PortofolioDetail = lazy(() => import('./pages/PortofolioDetail'))
+const Tentang = lazy(() => import('./pages/Tentang'))
+const AdminLogin = lazy(() => import('./pages/admin/Login'))
+const AdminInformasi = lazy(() => import('./pages/admin/AdminInformasi'))
+const AdminPortfolio = lazy(() => import('./pages/admin/AdminPortfolio'))
+const AdminRepository = lazy(() => import('./pages/admin/AdminRepository'))
 
 function AdminShell({ onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -75,18 +76,20 @@ function AppContent() {
         {/* Halaman Publik dengan transisi */}
         <Route path="*" element={
           <>
-            <Particles quantity={100} />
+            <Particles quantity={80} />
             <Navbar isAdmin={isAdmin} />
             <main className="flex-1">
               <AnimatePresence mode="wait">
-                <Routes location={location} key={location.pathname}>
-                  <Route path="/" element={<PageTransition><Beranda /></PageTransition>} />
-                  <Route path="/informasi" element={<PageTransition><Informasi /></PageTransition>} />
-                  <Route path="/info/:id" element={<PageTransition><InfoDetail /></PageTransition>} />
-                  <Route path="/portofolio" element={<PageTransition><Portofolio /></PageTransition>} />
-                  <Route path="/portofolio/:id" element={<PageTransition><PortofolioDetail /></PageTransition>} />
-                  <Route path="/tentang" element={<PageTransition><Tentang /></PageTransition>} />
-                </Routes>
+                <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#111] dark:border-white" /></div>}>
+                  <Routes location={location} key={location.pathname}>
+                    <Route path="/" element={<PageTransition><Beranda /></PageTransition>} />
+                    <Route path="/informasi" element={<PageTransition><Informasi /></PageTransition>} />
+                    <Route path="/info/:id" element={<PageTransition><InfoDetail /></PageTransition>} />
+                    <Route path="/portofolio" element={<PageTransition><Portofolio /></PageTransition>} />
+                    <Route path="/portofolio/:id" element={<PageTransition><PortofolioDetail /></PageTransition>} />
+                    <Route path="/tentang" element={<PageTransition><Tentang /></PageTransition>} />
+                  </Routes>
+                </Suspense>
               </AnimatePresence>
             </main>
             <Footer />

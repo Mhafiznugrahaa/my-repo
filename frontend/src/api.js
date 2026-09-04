@@ -52,6 +52,13 @@ export const getPortofolio = () => fetchJSON('/portofolio')
 export const getPortofolioDetail = (id) => fetchJSON(`/portofolio/${id}`)
 export const getTentang = () => fetchJSON('/tentang')
 
+// === VIEWS ===
+export const incrementView = (page = 'tentang') => fetchJSON('/views', {
+  method: 'POST',
+  body: JSON.stringify({ page }),
+})
+export const getViewCount = (page = 'tentang') => fetchJSON(`/views?page=${page}`)
+
 // === AUTH ===
 export const authCheck = () => fetchJSON('/auth/check')
 export const authLogin = async (username, password) => {

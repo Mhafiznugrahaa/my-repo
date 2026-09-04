@@ -24,6 +24,8 @@ Route::group('/api', function () {
     Route::get('/portofolio', [PublicController::class, 'portofolio']);
     Route::get('/portofolio/{id}', [PublicController::class, 'portofolioShow']);
     Route::get('/tentang', [PublicController::class, 'tentang']);
+    Route::post('/views', [PublicController::class, 'viewIncrement']);
+    Route::get('/views', [PublicController::class, 'viewCount']);
 
     Route::post('/auth/login', [ApiAuthController::class, 'login']);
     Route::get('/auth/check', [ApiAuthController::class, 'check']);

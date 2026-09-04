@@ -3,8 +3,18 @@
 use support\think\Db;
 use think\Container;
 use Webman\ThinkOrm\DbManager;
+use Dotenv\Dotenv;
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+// Load .env first
+if (class_exists(Dotenv::class) && file_exists(__DIR__ . '/.env')) {
+    if (method_exists(Dotenv::class, 'createUnsafeImmutable')) {
+        Dotenv::createUnsafeImmutable(__DIR__)->load();
+    } else {
+        Dotenv::createMutable(__DIR__)->load();
+    }
+}
 
 // Muat konfigurasi think-orm
 $config = require __DIR__ . '/config/think-orm.php';
@@ -61,8 +71,47 @@ $sqlInfos = $type === 'mysql'
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )";
 
+$sqlViews = $type === 'mysql'
+    ? "CREATE TABLE IF NOT EXISTS page_views (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        page VARCHAR(100) NOT NULL UNIQUE,
+        views INT UNSIGNED NOT NULL DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+    : "CREATE TABLE IF NOT EXISTS page_views (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        page VARCHAR(100) NOT NULL UNIQUE,
+        views INTEGER UNSIGNED NOT NULL DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )";
+
+$sqlVisitors = $type === 'mysql'
+    ? "CREATE TABLE IF NOT EXISTS page_visitors (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        page VARCHAR(100) NOT NULL,
+        ip VARCHAR(45) NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE KEY uniq_page_ip (page, ip)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+    : "CREATE TABLE IF NOT EXISTS page_visitors (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        page VARCHAR(100) NOT NULL,
+        ip VARCHAR(45) NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )";
+
 Db::execute($sqlAdmins);
 Db::execute($sqlInfos);
+Db::execute($sqlViews);
+Db::execute($sqlVisitors);
+
+// Seed page_views for 'tentang' page if not exists
+$exists = Db::table('page_views')->where('page', 'tentang')->count();
+if ($exists == 0) {
+    Db::table('page_views')->insert(['page' => 'tentang', 'views' => 0]);
+}
 
 // Seed admin default (username: admin, password: admin123)
 $exists = Db::table('admins')->where('username', 'admin')->count();

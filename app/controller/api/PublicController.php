@@ -96,10 +96,10 @@ class PublicController
         $profile = [
             'name'        => 'M. Hafiz Nugrahaa',
             'username'    => 'Mhafiznugrahaa',
-            'role'        => 'Learning, Coding, Sleeping Everywhere',
-            'bio'         => 'Mahasiswa Teknologi Informasi yang antusias dalam pengembangan web, AI Agent, dan mobile apps.',
+            'role'        => 'software engineer',
+            'bio'         => 'Mahasiswa Teknik Informatika yang antusias dalam pengembangan web, AI Agent, dan mobile apps.',
             'avatar'      => 'https://avatars.githubusercontent.com/u/188332725?v=4',
-            'email'       => 'mhafiznugrahaa@gmail.com',
+            'email'       => 'afiznugraha890@gmail.com',
             'github'      => 'https://github.com/Mhafiznugrahaa',
             'linkedin'    => 'https://linkedin.com/in/mhafiznugrahaa',
             'instagram'   => 'https://instagram.com/mhafiznugrahaa',
@@ -109,5 +109,52 @@ class PublicController
             'profile'      => $profile,
             'repositories' => $repositories,
         ]);
+    }
+
+    public function viewIncrement(Request $request): \support\Response
+    {
+        $page = (string) $request->input('page', 'tentang');
+        $ip = $this->getClientIp($request);
+
+        $visitor = \support\think\Db::table('page_visitors')
+            ->where('page', $page)
+            ->where('ip', $ip)
+            ->find();
+
+        if (!$visitor) {
+            \support\think\Db::table('page_visitors')->insert([
+                'page' => $page,
+                'ip' => $ip,
+                'created_at' => date('Y-m-d H:i:s'),
+            ]);
+            $this->incrementTotal($page);
+        }
+
+        $row = \support\think\Db::table('page_views')->where('page', $page)->find();
+        return json(['views' => $row ? (int) $row['views'] : 0]);
+    }
+
+    private function incrementTotal(string $page): void
+    {
+        $row = \support\think\Db::table('page_views')->where('page', $page)->find();
+        if (!$row) {
+            \support\think\Db::table('page_views')->insert(['page' => $page, 'views' => 1]);
+        } else {
+            \support\think\Db::table('page_views')
+                ->where('page', $page)
+                ->update(['views' => (int) $row['views'] + 1]);
+        }
+    }
+
+    public function viewCount(Request $request): \support\Response
+    {
+        $page = (string) $request->input('page', 'tentang');
+        $row = \support\think\Db::table('page_views')->where('page', $page)->find();
+        return json(['views' => $row ? (int) $row['views'] : 0]);
+    }
+
+    private function getClientIp(Request $request): string
+    {
+        return $request->getRealIp() ?: '127.0.0.1';
     }
 }
