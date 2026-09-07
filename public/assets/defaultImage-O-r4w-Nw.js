@@ -1,0 +1,1 @@
+const g="/assets/gambar1-CDyNCg7j.jpg",o="/assets/gambar2-gnqkYShV.jpg",e="/assets/gambar3-go8GYX6y.jpg",a=[g,o,e];function c(s,t=0){if(s&&typeof s=="string"&&s.trim()!==""&&s!=="null")return s;const n=typeof t=="number"?t:parseInt(t,10),r=isNaN(n)?0:Math.abs(n);return a[r%a.length]}export{c as i};

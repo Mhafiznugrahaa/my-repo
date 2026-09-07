@@ -11,6 +11,18 @@ export default function ViewCounter({ page = 'tentang', className = '' }) {
     }).catch(() => {})
   }, [page])
 
+  useEffect(() => {
+    const inc = async () => {
+      if (incremented) return
+      setIncremented(true)
+      try {
+        const res = await incrementView(page)
+        if (res?.views !== undefined) setCount(res.views)
+      } catch {}
+    }
+    inc()
+  }, [page])
+
   const increment = async () => {
     if (incremented) return
     setIncremented(true)
