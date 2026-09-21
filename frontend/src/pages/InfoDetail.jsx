@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getInfoDetail } from '../api'
 import { imgSrc } from '../defaultImage'
+import ImageSlider from '../components/ImageSlider'
 
 export default function InfoDetail() {
   const { id } = useParams()
@@ -44,10 +45,10 @@ export default function InfoDetail() {
       <div className="flex items-center gap-3 mt-5 mb-12">
         <span className="text-sm text-[#8a8a8a] dark:text-white/40">Dipublikasikan {new Date(info.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
       </div>
-      <div className="mb-12 border border-[#ececec] dark:border-white/10 overflow-hidden">
-        <img src={imgSrc(info.image, info.id)} alt={info.title} className="w-full" />
+      <div className="mb-12">
+        <ImageSlider images={[imgSrc(info.image, info.id), ...(info.images || []).map(img => img.image_path).filter(Boolean)]} alt={info.title} />
       </div>
-      <div className="text-base sm:text-lg leading-[1.9] text-[#444] dark:text-white/70 whitespace-pre-wrap">{info.body}</div>
+      <div className="text-base sm:text-lg leading-[1.9] text-[#444] dark:text-white/70 whitespace-pre-wrap text-justify [hyphens:auto]">{info.body}</div>
     </article>
   )
 }

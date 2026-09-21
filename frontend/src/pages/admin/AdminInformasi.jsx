@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { adminInfoList, adminInfoSave, adminInfoUpdate, adminInfoDelete } from '../../api'
 import { AdminActionButton, PaginationButton } from '../../components/Buttons'
 
 const emptyForm = { title: '', category: 'Umum', body: '', status: 'published', image: null, remove_image: '0' }
+
+let previewKey = 0
 
 export default function AdminInformasi() {
   const [items, setItems] = useState([])
@@ -13,6 +15,11 @@ export default function AdminInformasi() {
   const [form, setForm] = useState(emptyForm)
   const [errors, setErrors] = useState('')
 
+  const [existingImages, setExistingImages] = useState([])
+  const [removedImageIds, setRemovedImageIds] = useState([])
+  const [newImages, setNewImages] = useState([])
+  const newImagesRef = useRef([])
+
   const load = useCallback(async () => {
     const res = await adminInfoList({ q: keyword, page })
     setItems(res.data)
@@ -21,9 +28,40 @@ export default function AdminInformasi() {
 
   useEffect(() => { load() }, [load])
 
-  const openCreate = () => { setForm(emptyForm); setErrors(''); setModal('create') }
-  const openEdit = (item) => { setForm({ ...item, remove_image: '0' }); setErrors(''); setModal(item) }
+  // Cleanup object URL agar tidak bocor memory
+  useEffect(() => { newImagesRef.current = newImages }, [newImages])
+  useEffect(() => {
+    return () => newImagesRef.current.forEach(img => { if (img.url?.startsWith('blob:')) URL.revokeObjectURL(img.url) })
+  }, [])
+
+  const openCreate = () => { setForm(emptyForm); setErrors(''); setExistingImages([]); setRemovedImageIds([]); setNewImages([]); setModal('create') }
+  const openEdit = (item) => { setForm({ ...item, remove_image: '0' }); setErrors(''); setExistingImages(item.images || []); setRemovedImageIds([]); setNewImages([]); setModal(item) }
   const closeModal = () => { setModal(null); setErrors('') }
+
+  const addGalleryFiles = (e) => {
+    const files = Array.from(e.target.files || [])
+    const next = files.map(file => {
+      previewKey += 1
+      return { key: previewKey, file, url: URL.createObjectURL(file) }
+    })
+    setNewImages(prev => [...prev, ...next])
+    e.target.value = ''
+  }
+
+  const removeNewImage = (key) => {
+    setNewImages(prev => prev.filter(img => {
+      if (img.key === key && img.url?.startsWith('blob:')) URL.revokeObjectURL(img.url)
+      return img.key !== key
+    }))
+  }
+
+  const markImageRemove = (id) => {
+    setRemovedImageIds(prev => (prev.includes(id) ? prev : [...prev, id]))
+  }
+
+  const unmarkImageRemove = (id) => {
+    setRemovedImageIds(prev => prev.filter(x => x !== id))
+  }
 
   const handleSave = async (e) => {
     e.preventDefault(); setErrors('')
@@ -34,6 +72,8 @@ export default function AdminInformasi() {
     fd.append('status', form.status)
     if (form.image instanceof File) fd.append('image', form.image)
     if (modal !== 'create') { fd.append('remove_image', form.remove_image) }
+    newImages.forEach(img => fd.append('images[]', img.file))
+    removedImageIds.forEach(id => fd.append('remove_images[]', String(id)))
     try {
       if (modal === 'create') await adminInfoSave(fd)
       else await adminInfoUpdate(modal.id, fd)
@@ -113,13 +153,47 @@ export default function AdminInformasi() {
                 <textarea value={form.body} onChange={e => setForm({ ...form, body: e.target.value })} rows={6} className="font-sans text-sm text-[#111] dark:text-white px-4 py-3 border border-[#ececec] dark:border-white/10 rounded w-full bg-white dark:bg-black/50 focus:outline-none focus:border-[#111] dark:focus:border-white/50 transition-colors resize-y" />
               </div>
               <div className="mb-5">
-                <label className="block text-xs font-semibold tracking-wider uppercase text-[#8a8a8a] dark:text-white/50 mb-2">Gambar (opsional)</label>
+                <label className="block text-xs font-semibold tracking-wider uppercase text-[#8a8a8a] dark:text-white/50 mb-2">Gambar Cover (opsional)</label>
                 {form.image && typeof form.image === 'string' && (
                   <div className="mb-3"><img src={form.image} alt="" className="max-w-[200px] border border-[#ececec] dark:border-white/10 rounded" />
                     <label className="inline-flex items-center gap-2 mt-2 text-sm cursor-pointer"><input type="checkbox" checked={form.remove_image === '1'} onChange={e => setForm({ ...form, remove_image: e.target.checked ? '1' : '0' })} /> Hapus gambar</label>
                   </div>
                 )}
                 <input type="file" accept="image/*" onChange={e => setForm({ ...form, image: e.target.files[0] })} className="font-sans text-sm text-[#2c2c2c] dark:text-white/70 px-3 py-2 border border-dashed border-[#ececec] dark:border-white/10 rounded w-full bg-white dark:bg-black/50 cursor-pointer hover:border-[#111] dark:hover:border-white/50" />
+              </div>
+
+              <div className="mb-5">
+                <label className="block text-xs font-semibold tracking-wider uppercase text-[#8a8a8a] dark:text-white/50 mb-2">Gambar Detail (bisa pilih lebih dari satu)</label>
+
+                {(existingImages.length > 0 || newImages.length > 0) && (
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-3">
+                    {existingImages.map(img => {
+                      const removed = removedImageIds.includes(img.id)
+                      return (
+                        <div key={`existing-${img.id}`} className={`relative border ${removed ? 'border-red-400 opacity-40' : 'border-[#ececec] dark:border-white/10'} rounded overflow-hidden group`}>
+                          <img src={img.image_path} alt="" className="w-full aspect-[4/3] object-cover" />
+                          <button type="button"
+                            title={removed ? 'Batalkan penghapusan' : 'Hapus gambar'}
+                            onClick={() => removed ? unmarkImageRemove(img.id) : markImageRemove(img.id)}
+                            className={`absolute top-1.5 right-1.5 w-6 h-6 inline-flex items-center justify-center text-xs font-bold rounded-full text-white transition-all ${removed ? 'bg-[#111] dark:bg-white text-white dark:text-black' : 'bg-black/70'} hover:scale-110 cursor-pointer`}>
+                            {removed ? '↺' : '✕'}
+                          </button>
+                          {removed && <span className="absolute bottom-1.5 left-1.5 right-1.5 text-[9px] font-bold uppercase tracking-wider bg-red-500 text-white text-center py-0.5 rounded">Dihapus</span>}
+                        </div>
+                      )
+                    })}
+                    {newImages.map(img => (
+                      <div key={img.key} className="relative border border-[#ececec] dark:border-white/10 rounded overflow-hidden group">
+                        <img src={img.url} alt="" className="w-full aspect-[4/3] object-cover" />
+                        <button type="button" onClick={() => removeNewImage(img.key)}
+                          className="absolute top-1.5 right-1.5 w-6 h-6 inline-flex items-center justify-center text-xs font-bold rounded-full text-white bg-black/70 hover:scale-110 transition-all cursor-pointer">✕</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <input type="file" accept="image/*" multiple onChange={addGalleryFiles}
+                  className="font-sans text-sm text-[#2c2c2c] dark:text-white/70 px-3 py-2 border border-dashed border-[#ececec] dark:border-white/10 rounded w-full bg-white dark:bg-black/50 cursor-pointer hover:border-[#111] dark:hover:border-white/50" />
               </div>
               <div className="mb-6">
                 <label className="block text-xs font-semibold tracking-wider uppercase text-[#8a8a8a] dark:text-white/50 mb-2">Status</label>

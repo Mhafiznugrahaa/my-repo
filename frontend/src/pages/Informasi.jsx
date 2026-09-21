@@ -41,7 +41,7 @@ export default function Informasi() {
               flex
             />
           </div>
-          <p className="text-base text-[#666] dark:text-white/50 mt-4 max-w-[480px] leading-relaxed">Kumpulan informasi dan catatan seputar proyek, pembelajaran, dan hal menarik lainnya.</p>
+          <p className="text-base text-[#666] dark:text-white/50 mt-4 max-w-[480px] leading-relaxed text-justify [hyphens:auto]">Kumpulan informasi dan catatan seputar proyek, pembelajaran, dan hal menarik lainnya.</p>
         </div>
       </div>
 
@@ -83,7 +83,7 @@ export default function Informasi() {
                   <span className="text-[11px] text-[#aaa] dark:text-white/30 font-medium">{new Date(info.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                 </div>
                 <h3 className="text-lg font-bold text-[#111] dark:text-white group-hover:opacity-70 motion-safe:transition-opacity motion-safe:duration-300">{info.title}</h3>
-                <p className="text-sm text-[#555] dark:text-white/60 mt-2 leading-relaxed line-clamp-3">{info.body?.substring(0, 130)}{info.body?.length > 130 ? '…' : ''}</p>
+                <p className="text-sm text-[#555] dark:text-white/60 mt-2 leading-relaxed line-clamp-3 text-justify [hyphens:auto]">{info.body?.substring(0, 130)}{info.body?.length > 130 ? '…' : ''}</p>
               </div>
             </Link>
           ))}

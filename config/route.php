@@ -27,9 +27,21 @@ Route::group('/api', function () {
     Route::post('/views', [PublicController::class, 'viewIncrement']);
     Route::get('/views', [PublicController::class, 'viewCount']);
 
+    // Tech stack (publik read)
+    Route::get('/tech-stacks', [PublicController::class, 'techStacks']);
+
     Route::post('/auth/login', [ApiAuthController::class, 'login']);
     Route::get('/auth/check', [ApiAuthController::class, 'check']);
     Route::get('/auth/logout', [ApiAuthController::class, 'logout']);
+
+    // Admin tech stack CRUD. File icon dikirim via FormData (POST), makanya
+    // update/delete juga punya alias POST agar konsisten dgn endpoint lain.
+    Route::get('/admin/tech-stacks', [ApiAdminController::class, 'techStackIndex']);
+    Route::post('/tech-stacks', [ApiAdminController::class, 'techStackStore']);
+    Route::put('/tech-stacks/{id}', [ApiAdminController::class, 'techStackUpdate']);
+    Route::delete('/tech-stacks/{id}', [ApiAdminController::class, 'techStackDelete']);
+    Route::post('/tech-stacks/update/{id}', [ApiAdminController::class, 'techStackUpdate']);
+    Route::post('/tech-stacks/delete/{id}', [ApiAdminController::class, 'techStackDelete']);
 
     Route::get('/admin/informasi', [ApiAdminController::class, 'infoIndex']);
     Route::post('/admin/informasi/store', [ApiAdminController::class, 'infoStore']);

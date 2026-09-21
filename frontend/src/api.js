@@ -27,9 +27,9 @@ async function fetchJSON(url, { headers, ...rest } = {}) {
   return data
 }
 
-async function fetchForm(url, formData) {
+async function fetchForm(url, formData, method = 'POST') {
   const res = await fetch(BASE + url, {
-    method: 'POST',
+    method,
     body: formData,
     headers: authHeaders(),
   })
@@ -51,6 +51,10 @@ export const getInfoDetail = (id) => fetchJSON(`/info/${id}`)
 export const getPortofolio = () => fetchJSON('/portofolio')
 export const getPortofolioDetail = (id) => fetchJSON(`/portofolio/${id}`)
 export const getTentang = () => fetchJSON('/tentang')
+export const getTechStacks = (params = {}) => {
+  const q = new URLSearchParams(params).toString()
+  return fetchJSON(`/tech-stacks${q ? '?' + q : ''}`)
+}
 
 // === VIEWS ===
 export const incrementView = (page = 'tentang') => fetchJSON('/views', {
@@ -89,6 +93,15 @@ export const adminPortfolioList = (params = {}) => {
 export const adminPortfolioSave = (formData) => fetchForm('/admin/portofolio/store', formData)
 export const adminPortfolioUpdate = (id, formData) => fetchForm(`/admin/portofolio/update/${id}`, formData)
 export const adminPortfolioDelete = (id) => fetchJSON(`/admin/portofolio/delete/${id}`, { method: 'POST' })
+
+// === ADMIN: TECH STACK ===
+export const adminTechStackList = (params = {}) => {
+  const q = new URLSearchParams(params).toString()
+  return fetchJSON(`/admin/tech-stacks${q ? '?' + q : ''}`)
+}
+export const adminTechStackSave = (formData) => fetchForm('/tech-stacks', formData)
+export const adminTechStackUpdate = (id, formData) => fetchForm(`/tech-stacks/update/${id}`, formData)
+export const adminTechStackDelete = (id) => fetchJSON(`/tech-stacks/${id}`, { method: 'DELETE' })
 
 // === ADMIN: REPOSITORY ===
 export const adminRepoList = (params = {}) => {

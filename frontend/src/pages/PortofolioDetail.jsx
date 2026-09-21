@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { getPortofolioDetail } from '../api'
 import { imgSrc } from '../defaultImage'
 import { PrimaryButton } from '../components/Buttons'
+import ImageSlider from '../components/ImageSlider'
 
 export default function PortofolioDetail() {
   const { id } = useParams()
@@ -11,6 +12,9 @@ export default function PortofolioDetail() {
   useEffect(() => { getPortofolioDetail(id).then(setPortfolio).catch(() => setPortfolio(null)) }, [id])
 
   if (!portfolio) return <div className="pt-[240px] text-center text-[#8a8a8a] dark:text-white/40 motion-safe:transition-all motion-safe:duration-300">Memuat…</div>
+
+  const gallery = (portfolio.images || []).map(img => img.image_path).filter(Boolean)
+  const slides = [imgSrc(portfolio.image, portfolio.id), ...gallery]
 
   return (
     <article className="max-w-[720px] mx-auto pt-[160px] pb-28 px-6 sm:px-10">
@@ -27,30 +31,38 @@ export default function PortofolioDetail() {
         Kembali ke Portofolio
       </Link>
 
-      {/* {portfolio.category && (
-        <span className="tag-pill">{portfolio.category}</span>
-      )} */}
-
         <span className="text-xs text-[#8a8a8a] dark:text-white/40">Dibuat {new Date(portfolio.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
 
     </div>
 
 
-      {/* 3. Judul Proyek */}
       <h1 className="text-3xl sm:text-4xl lg:text-5xl mb-8">{portfolio.title}</h1>
 
-      {/* 5. Gambar Proyek (Di Bawah Deskripsi) */}
-      <div className="mb-12 border border-[#ececec] dark:border-white/10 overflow-hidden">
-        <img src={imgSrc(portfolio.image, portfolio.id)} alt={portfolio.title} className="w-full" />
+      <div className="mb-12">
+        <ImageSlider images={slides} alt={portfolio.title} />
       </div>
 
-      {/* 4. Deskripsi Proyek (Di Atas Gambar) */}
       {portfolio.description && (
-        <div className="text-base sm:text-lg leading-[1.85] text-[#444] dark:text-white/70 whitespace-pre-wrap mb-10">
+        <div className="text-base sm:text-lg leading-[1.85] text-[#444] dark:text-white/70 whitespace-pre-wrap text-justify [hyphens:auto] mb-10">
           {portfolio.description}
         </div>
       )}
 
+      {portfolio.tech_stacks?.length > 0 && (
+        <section className="mb-12 pt-8 border-t border-[#ececec] dark:border-white/10">
+          <h2 className="text-xs font-semibold tracking-[.22em] uppercase text-[#8a8a8a] dark:text-white/50 mb-5">Tech Stack</h2>
+          <div className="flex flex-wrap items-center gap-3">
+            {portfolio.tech_stacks.map(ts => (
+              <div key={ts.id} className="inline-flex items-center gap-2 border border-[#ececec] dark:border-white/10 px-3.5 py-2 rounded bg-white dark:bg-white/5">
+                {ts.icon
+                  ? <img src={ts.icon} alt={ts.name} className="w-5 h-5 object-contain" />
+                  : <span className="w-5 h-5 inline-flex items-center justify-center text-[10px] font-bold text-[#8a8a8a] dark:text-white/40 border border-[#ececec] dark:border-white/10 rounded-sm">{ts.name.charAt(0)}</span>}
+                <span className="text-sm font-medium text-[#111] dark:text-white/80">{ts.name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="flex flex-wrap gap-4 items-center pt-8 border-t border-[#ececec] dark:border-white/10">
         {portfolio.project_url && (

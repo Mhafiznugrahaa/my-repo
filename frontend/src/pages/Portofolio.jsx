@@ -50,6 +50,15 @@ export default function Portofolio() {
                 <span className="tag-pill">{p.category}</span>
                 <h3 className="text-lg font-bold text-[#111] dark:text-white mt-3 group-hover:opacity-70 motion-safe:transition-opacity motion-safe:duration-300">{p.title}</h3>
                 <p className="text-sm text-[#555] dark:text-white/60 mt-2 leading-relaxed line-clamp-3">{p.description?.substring(0, 150)}{p.description?.length > 150 ? '…' : ''}</p>
+                {p.tech_stacks?.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2.5 mt-4">
+                    {p.tech_stacks.map(ts => (
+                      ts.icon
+                        ? <img key={ts.id} src={ts.icon} alt={ts.name} title={ts.name} className="w-5 h-5 object-contain" />
+                        : <span key={ts.id} title={ts.name} className="text-[10px] font-semibold uppercase tracking-[.12em] text-[#8a8a8a] dark:text-white/40 border border-[#ececec] dark:border-white/10 px-2 py-0.5 rounded-full">{ts.name}</span>
+                    ))}
+                  </div>
+                )}
                 {p.project_url && (
                   <div className="mt-5 pt-4 border-t border-[#ececec] dark:border-white/10">
                     <span className="text-xs text-[#8a8a8a] dark:text-white/40 font-medium">Lihat proyek →</span>

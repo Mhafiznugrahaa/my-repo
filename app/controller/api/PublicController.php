@@ -3,9 +3,13 @@
 namespace app\controller\api;
 
 use app\model\Information;
+use app\model\InformationImage;
 use app\model\Portfolio;
+use app\model\ProjectImage;
 use app\model\Repository;
+use app\model\TechStack;
 use support\Request;
+use support\think\Db;
 
 class PublicController
 {
@@ -18,9 +22,24 @@ class PublicController
 
         return json([
             'repositories' => $repositories,
-            'portfolios'   => $portfolios,
+            'portfolios'   => $this->attachRelations($portfolios),
             'informations' => $informations,
         ]);
+    }
+
+    public function techStacks(Request $request): \support\Response
+    {
+        $keyword = (string) $request->input('q', '');
+        $kategori = (string) $request->input('kategori', '');
+        $query = new TechStack();
+        if ($keyword !== '') {
+            $query = $query->where('name', 'like', "%{$keyword}%");
+        }
+        if ($kategori !== '') {
+            $query = $query->where('category', $kategori);
+        }
+        $items = $query->order('name', 'asc')->select();
+        return json($items);
     }
 
     public function informasi(Request $request): \support\Response
@@ -69,13 +88,16 @@ class PublicController
             return json(['code' => 404, 'msg' => 'Tidak ditemukan'])->withStatus(404);
         }
 
-        return json($info);
+        $data = $info->toArray();
+        $data['images'] = $this->imagesForInformation((int) $info->id);
+
+        return json($data);
     }
 
     public function portofolio(Request $request): \support\Response
     {
         $portfolios = Portfolio::order('created_at', 'desc')->select();
-        return json($portfolios);
+        return json($this->attachRelations($portfolios));
     }
 
     public function portofolioShow(Request $request, $id): \support\Response
@@ -86,7 +108,11 @@ class PublicController
             return json(['code' => 404, 'msg' => 'Tidak ditemukan'])->withStatus(404);
         }
 
-        return json($portfolio);
+        $data = $portfolio->toArray();
+        $data['tech_stacks'] = $this->techStacksForProject((int) $portfolio->id);
+        $data['images']      = $this->imagesForProject((int) $portfolio->id);
+
+        return json($data);
     }
 
     public function tentang(Request $request): \support\Response
@@ -156,5 +182,46 @@ class PublicController
     private function getClientIp(Request $request): string
     {
         return $request->getRealIp() ?: '127.0.0.1';
+    }
+
+    private function attachRelations($portfolios): array
+    {
+        $items = [];
+        foreach ($portfolios as $portfolio) {
+            $arr = $portfolio->toArray();
+            $arr['tech_stacks'] = $this->techStacksForProject((int) $portfolio->id);
+            $items[] = $arr;
+        }
+        return $items;
+    }
+
+    private function techStacksForProject(int $projectId): array
+    {
+        $rows = Db::table('project_tech_stack')
+            ->alias('pts')
+            ->join('tech_stacks ts', 'ts.id = pts.tech_stack_id')
+            ->where('pts.project_id', $projectId)
+            ->order('ts.name', 'asc')
+            ->field('ts.id, ts.name, ts.icon, ts.category')
+            ->select();
+        return $rows ? $rows->toArray() : [];
+    }
+
+    private function imagesForProject(int $projectId): array
+    {
+        $rows = ProjectImage::where('project_id', $projectId)
+            ->order('sort_order', 'asc')
+            ->order('id', 'asc')
+            ->select();
+        return $rows ? $rows->toArray() : [];
+    }
+
+    private function imagesForInformation(int $informationId): array
+    {
+        $rows = InformationImage::where('information_id', $informationId)
+            ->order('sort_order', 'asc')
+            ->order('id', 'asc')
+            ->select();
+        return $rows ? $rows->toArray() : [];
     }
 }

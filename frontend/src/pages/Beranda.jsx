@@ -26,6 +26,15 @@ function ProjectCard({ item }) {
         {item.description && (
           <p className="text-sm text-[#555] dark:text-white/60 mt-2 leading-relaxed line-clamp-2">{item.description.substring(0, 120)}{item.description.length > 120 ? '…' : ''}</p>
         )}
+        {item.tech_stacks?.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 mt-4">
+            {item.tech_stacks.map(ts => (
+              ts.icon
+                ? <img key={ts.id} src={ts.icon} alt={ts.name} title={ts.name} className="w-4 h-4 object-contain" />
+                : <span key={ts.id} title={ts.name} className="text-[9px] font-semibold uppercase tracking-[.12em] text-[#8a8a8a] dark:text-white/40 border border-[#ececec] dark:border-white/10 px-2 py-0.5 rounded-full">{ts.name}</span>
+            ))}
+          </div>
+        )}
       </div>
     </Link>
   )
@@ -175,7 +184,7 @@ export default function Beranda() {
           <section className="container-wide section-space bg-white dark:bg-[#0a0a0a] transition-colors duration-500">
             <div className="max-w-[820px] mb-14">
               <span className="eyebrow">Karya Terbaru</span>
-              <h2 className="mt-4 text-[#111] dark:text-white">Proyek Pilihan</h2>
+              <h2 className="mt-4 text-[#111] dark:text-white">Proyek Terbaru</h2>
               <p className="text-sm text-[#666] dark:text-white/50 mt-3 max-w-[480px]">Proyek terbaik yang pernah saya kerjakan, dari tugas kuliah hingga proyek mandiri.</p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">

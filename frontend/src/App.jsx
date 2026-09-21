@@ -20,6 +20,7 @@ const AdminLogin = lazy(() => import('./pages/admin/Login'))
 const AdminInformasi = lazy(() => import('./pages/admin/AdminInformasi'))
 const AdminPortfolio = lazy(() => import('./pages/admin/AdminPortfolio'))
 const AdminRepository = lazy(() => import('./pages/admin/AdminRepository'))
+const AdminTechStack = lazy(() => import('./pages/admin/AdminTechStack'))
 
 function AdminShell({ onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -33,6 +34,7 @@ function AdminShell({ onLogout }) {
           <nav className={`${menuOpen ? 'flex' : 'hidden'} sm:flex absolute sm:static top-[72px] left-0 right-0 flex-col sm:flex-row items-start sm:items-center gap-0 sm:gap-7 bg-white dark:bg-black sm:bg-transparent sm:dark:bg-transparent backdrop-blur-lg border-b sm:border-b-0 border-[#ececec] dark:border-white/10 p-5 sm:p-0`}>
             <a href="/admin" className="text-sm font-medium text-[#8a8a8a] dark:text-white/50 hover:text-[#111] dark:hover:text-white block sm:inline py-2 sm:py-0">Informasi</a>
             <a href="/admin/portofolio" className="text-sm font-medium text-[#8a8a8a] dark:text-white/50 hover:text-[#111] dark:hover:text-white block sm:inline py-2 sm:py-0">Portofolio</a>
+            <a href="/admin/tech-stacks" className="text-sm font-medium text-[#8a8a8a] dark:text-white/50 hover:text-[#111] dark:hover:text-white block sm:inline py-2 sm:py-0">Tech Stack</a>
             <a href="/admin/repository" className="text-sm font-medium text-[#8a8a8a] dark:text-white/50 hover:text-[#111] dark:hover:text-white block sm:inline py-2 sm:py-0">Repository</a>
             <a href="/" className="text-sm font-medium text-[#8a8a8a] dark:text-white/50 hover:text-[#111] dark:hover:text-white block sm:inline py-2 sm:py-0">Lihat Situs</a>
             <button onClick={onLogout} className="text-sm font-medium text-[#8a8a8a] dark:text-white/50 hover:text-[#111] dark:hover:text-white block sm:inline py-2 sm:py-0">Keluar</button>
@@ -70,6 +72,7 @@ function AppContent() {
         }>
           <Route index element={<AdminInformasi />} />
           <Route path="portofolio" element={<AdminPortfolio />} />
+          <Route path="tech-stacks" element={<AdminTechStack />} />
           <Route path="repository" element={<AdminRepository />} />
         </Route>
 

@@ -3,15 +3,20 @@
 namespace app\controller\api;
 
 use app\model\Information;
+use app\model\InformationImage;
 use app\model\Portfolio;
+use app\model\ProjectImage;
 use app\model\Repository;
+use app\model\TechStack;
 use support\Request;
 use support\Response;
+use support\think\Db;
 
 class AdminController
 {
     private const ALLOWED_EXT = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
     private const MAX_SIZE = 2 * 1024 * 1024;
+    private const TECH_CATEGORIES = ['backend', 'frontend', 'database', 'tools'];
 
     private function checkAuth(): bool
     {
@@ -38,7 +43,11 @@ class AdminController
         }
         $total = $query->count();
         $items = $query->order('created_at', 'desc')->page($page, 10)->select();
-        return json(['data' => $items, 'total' => $total, 'page' => $page, 'last_page' => max(1, (int) ceil($total / 10))]);
+        $data = [];
+        foreach ($items as $item) {
+            $data[] = $this->infoWithRelations($item);
+        }
+        return json(['data' => $data, 'total' => $total, 'page' => $page, 'last_page' => max(1, (int) ceil($total / 10))]);
     }
 
     public function infoStore(Request $request): Response
@@ -55,7 +64,8 @@ class AdminController
         $uploaded = $this->handleUpload($request);
         if ($uploaded) $data['image'] = $uploaded;
         $info = Information::create($data);
-        return json(['code' => 0, 'msg' => 'Berhasil disimpan', 'data' => $info]);
+        $this->storeInfoImages($info->id, $this->handleGalleryUpload($request));
+        return json(['code' => 0, 'msg' => 'Berhasil disimpan', 'data' => $this->infoWithRelations($info)]);
     }
 
     public function infoUpdate(Request $request, $id): Response
@@ -84,7 +94,9 @@ class AdminController
             $data['image'] = $uploaded;
         }
         $info->save($data);
-        return json(['code' => 0, 'msg' => 'Berhasil diperbarui', 'data' => $info]);
+        $this->removeInfoImages($info->id, $request->post('remove_images', []));
+        $this->storeInfoImages($info->id, $this->handleGalleryUpload($request));
+        return json(['code' => 0, 'msg' => 'Berhasil diperbarui', 'data' => $this->infoWithRelations($info)]);
     }
 
     public function infoDelete(Request $request, $id): Response
@@ -93,6 +105,11 @@ class AdminController
         $info = Information::find($id);
         if ($info) {
             if ($info->image) $this->deleteImageFile($info->image);
+            $imgs = InformationImage::where('information_id', $info->id)->select();
+            foreach ($imgs as $img) {
+                if ($img->image_path) $this->deleteImageFile($img->image_path);
+            }
+            InformationImage::where('information_id', $info->id)->delete();
             $info->delete();
         }
         return json(['code' => 0, 'msg' => 'Berhasil dihapus']);
@@ -113,7 +130,11 @@ class AdminController
         }
         $total = $query->count();
         $items = $query->order('created_at', 'desc')->page($page, 10)->select();
-        return json(['data' => $items, 'total' => $total, 'page' => $page, 'last_page' => max(1, (int) ceil($total / 10))]);
+        $data = [];
+        foreach ($items as $item) {
+            $data[] = $this->portfolioWithRelations($item);
+        }
+        return json(['data' => $data, 'total' => $total, 'page' => $page, 'last_page' => max(1, (int) ceil($total / 10))]);
     }
 
     public function portfolioStore(Request $request): Response
@@ -130,7 +151,9 @@ class AdminController
         $uploaded = $this->handleUpload($request);
         if ($uploaded) $data['image'] = $uploaded;
         $item = Portfolio::create($data);
-        return json(['code' => 0, 'msg' => 'Berhasil disimpan', 'data' => $item]);
+        $this->syncProjectTechStacks($item->id, $request->post('tech_stacks', []));
+        $this->storeGalleryImages($item->id, $this->handleGalleryUpload($request));
+        return json(['code' => 0, 'msg' => 'Berhasil disimpan', 'data' => $this->portfolioWithRelations($item)]);
     }
 
     public function portfolioUpdate(Request $request, $id): Response
@@ -156,7 +179,10 @@ class AdminController
             $data['image'] = $uploaded;
         }
         $item->save($data);
-        return json(['code' => 0, 'msg' => 'Berhasil diperbarui', 'data' => $item]);
+        $this->syncProjectTechStacks($item->id, $request->post('tech_stacks', []));
+        $this->removeProjectImages($item->id, $request->post('remove_images', []));
+        $this->storeGalleryImages($item->id, $this->handleGalleryUpload($request));
+        return json(['code' => 0, 'msg' => 'Berhasil diperbarui', 'data' => $this->portfolioWithRelations($item)]);
     }
 
     public function portfolioDelete(Request $request, $id): Response
@@ -165,6 +191,77 @@ class AdminController
         $item = Portfolio::find($id);
         if ($item) {
             if ($item->image) $this->deleteImageFile($item->image);
+            $gallery = ProjectImage::where('project_id', $item->id)->select();
+            foreach ($gallery as $img) {
+                if ($img->image_path) $this->deleteImageFile($img->image_path);
+            }
+            ProjectImage::where('project_id', $item->id)->delete();
+            Db::table('project_tech_stack')->where('project_id', $item->id)->delete();
+            $item->delete();
+        }
+        return json(['code' => 0, 'msg' => 'Berhasil dihapus']);
+    }
+
+    // ==================== TECH STACK ====================
+
+    public function techStackIndex(Request $request): Response
+    {
+        if (!$this->checkAuth()) return $this->unauth();
+        $keyword = (string) $request->input('q', '');
+        $page = (int) $request->input('page', 1);
+        $query = new TechStack();
+        if ($keyword !== '') {
+            $query = $query->where('name', 'like', "%{$keyword}%");
+        }
+        $total = $query->count();
+        $items = $query->order('name', 'asc')->page($page, 20)->select();
+        return json(['data' => $items, 'total' => $total, 'page' => $page, 'last_page' => max(1, (int) ceil($total / 20))]);
+    }
+
+    public function techStackStore(Request $request): Response
+    {
+        if (!$this->checkAuth()) return $this->unauth();
+        $name = trim((string) $request->post('name', ''));
+        if ($name === '') return json(['code' => 1, 'msg' => 'Nama wajib diisi'])->withStatus(400);
+        $category = (string) $request->post('category', 'tools');
+        if (!in_array($category, self::TECH_CATEGORIES)) $category = 'tools';
+        $data = ['name' => $name, 'category' => $category];
+        $uploaded = $this->handleUpload($request, 'icon');
+        if ($uploaded) $data['icon'] = $uploaded;
+        $item = TechStack::create($data);
+        return json(['code' => 0, 'msg' => 'Berhasil disimpan', 'data' => $item]);
+    }
+
+    public function techStackUpdate(Request $request, $id): Response
+    {
+        if (!$this->checkAuth()) return $this->unauth();
+        $item = TechStack::find($id);
+        if (!$item) return json(['code' => 404, 'msg' => 'Tidak ditemukan'])->withStatus(404);
+        $name = trim((string) $request->post('name', ''));
+        if ($name === '') return json(['code' => 1, 'msg' => 'Nama wajib diisi'])->withStatus(400);
+        $category = (string) $request->post('category', 'tools');
+        if (!in_array($category, self::TECH_CATEGORIES)) $category = 'tools';
+        $data = ['name' => $name, 'category' => $category];
+        if ($request->post('remove_icon') === '1' && $item->icon) {
+            $this->deleteImageFile($item->icon);
+            $data['icon'] = null;
+        }
+        $uploaded = $this->handleUpload($request, 'icon');
+        if ($uploaded) {
+            if ($item->icon) $this->deleteImageFile($item->icon);
+            $data['icon'] = $uploaded;
+        }
+        $item->save($data);
+        return json(['code' => 0, 'msg' => 'Berhasil diperbarui', 'data' => $item]);
+    }
+
+    public function techStackDelete(Request $request, $id): Response
+    {
+        if (!$this->checkAuth()) return $this->unauth();
+        $item = TechStack::find($id);
+        if ($item) {
+            if ($item->icon) $this->deleteImageFile($item->icon);
+            Db::table('project_tech_stack')->where('tech_stack_id', $item->id)->delete();
             $item->delete();
         }
         return json(['code' => 0, 'msg' => 'Berhasil dihapus']);
@@ -264,9 +361,9 @@ class AdminController
 
     // ==================== HELPERS ====================
 
-    private function handleUpload(Request $request): ?string
+    private function handleUpload(Request $request, string $field = 'image'): ?string
     {
-        $file = $request->file('image');
+        $file = $request->file($field);
         if (!$file || !$file->isValid()) return null;
         $ext = strtolower($file->getUploadExtension());
         if (!in_array($ext, self::ALLOWED_EXT)) return null;
@@ -275,6 +372,136 @@ class AdminController
         $filename = date('Ymd_His') . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
         $file->move($dir . '/' . $filename);
         return '/uploads/' . $filename;
+    }
+
+    private function handleGalleryUpload(Request $request): array
+    {
+        $files = $request->file('images');
+        if (!$files) return [];
+        if (!is_array($files)) $files = [$files];
+
+        $paths = [];
+        $dir = public_path() . '/uploads';
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        foreach ($files as $file) {
+            if (!$file || !$file->isValid()) continue;
+            $ext = strtolower($file->getUploadExtension());
+            if (!in_array($ext, self::ALLOWED_EXT)) continue;
+            if ($file->getSize() > self::MAX_SIZE) continue;
+            $filename = date('Ymd_His') . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
+            $file->move($dir . '/' . $filename);
+            $paths[] = '/uploads/' . $filename;
+        }
+        return $paths;
+    }
+
+    private function storeGalleryImages(int $projectId, array $paths): void
+    {
+        if ($paths === []) return;
+        $startSort = (int) ProjectImage::where('project_id', $projectId)->max('sort_order');
+        foreach ($paths as $index => $path) {
+            ProjectImage::create([
+                'project_id'  => $projectId,
+                'image_path'  => $path,
+                'sort_order'  => $startSort + $index + 1,
+            ]);
+        }
+    }
+
+    private function storeInfoImages(int $informationId, array $paths): void
+    {
+        if ($paths === []) return;
+        $startSort = (int) InformationImage::where('information_id', $informationId)->max('sort_order');
+        foreach ($paths as $index => $path) {
+            InformationImage::create([
+                'information_id' => $informationId,
+                'image_path'     => $path,
+                'sort_order'     => $startSort + $index + 1,
+            ]);
+        }
+    }
+
+    private function removeInfoImages(int $informationId, $imageIds): void
+    {
+        foreach ((array) $imageIds as $rawId) {
+            $imageId = (int) $rawId;
+            if ($imageId <= 0) continue;
+            $img = InformationImage::where('id', $imageId)->where('information_id', $informationId)->find();
+            if (!$img) continue;
+            if ($img->image_path) $this->deleteImageFile($img->image_path);
+            $img->delete();
+        }
+    }
+
+    private function removeProjectImages(int $projectId, $imageIds): void
+    {
+        foreach ((array) $imageIds as $rawId) {
+            $imageId = (int) $rawId;
+            if ($imageId <= 0) continue;
+            $img = ProjectImage::where('id', $imageId)->where('project_id', $projectId)->find();
+            if (!$img) continue;
+            if ($img->image_path) $this->deleteImageFile($img->image_path);
+            $img->delete();
+        }
+    }
+
+    private function syncProjectTechStacks(int $projectId, $techStackIds): void
+    {
+        $ids = array_values(array_unique(array_filter(array_map('intval', (array) $techStackIds))));
+        Db::table('project_tech_stack')->where('project_id', $projectId)->delete();
+        foreach ($ids as $id) {
+            if (!TechStack::find($id)) continue;
+            Db::table('project_tech_stack')->insert([
+                'project_id'    => $projectId,
+                'tech_stack_id' => $id,
+            ]);
+        }
+    }
+
+    private function portfolioWithRelations(Portfolio $item): array
+    {
+        $data = $item->toArray();
+        $data['tech_stacks'] = $this->techStacksForProject($item->id);
+        $data['images']      = $this->imagesForProject($item->id);
+        return $data;
+    }
+
+    private function infoWithRelations(Information $info): array
+    {
+        $data = $info->toArray();
+        $data['images'] = $this->imagesForInformation($info->id);
+        return $data;
+    }
+
+    private function techStacksForProject(int $projectId): array
+    {
+        $rows = Db::table('project_tech_stack')
+            ->alias('pts')
+            ->join('tech_stacks ts', 'ts.id = pts.tech_stack_id')
+            ->where('pts.project_id', $projectId)
+            ->order('ts.name', 'asc')
+            ->field('ts.id, ts.name, ts.icon, ts.category')
+            ->select();
+        return $rows ? $rows->toArray() : [];
+    }
+
+    private function imagesForProject(int $projectId): array
+    {
+        $rows = ProjectImage::where('project_id', $projectId)
+            ->order('sort_order', 'asc')
+            ->order('id', 'asc')
+            ->select();
+        return $rows ? $rows->toArray() : [];
+    }
+
+    private function imagesForInformation(int $informationId): array
+    {
+        $rows = InformationImage::where('information_id', $informationId)
+            ->order('sort_order', 'asc')
+            ->order('id', 'asc')
+            ->select();
+        return $rows ? $rows->toArray() : [];
     }
 
     private function deleteImageFile(string $imagePath): void
